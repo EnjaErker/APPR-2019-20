@@ -1,3 +1,4 @@
+Analiza turizma občin v Sloveniji
 # Analiza podatkov s programom R, 2019/20
 fgfd
 Repozitorij z gradivi pri predmetu APPR v študijskem letu 2019/20
