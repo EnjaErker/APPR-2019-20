@@ -6,8 +6,66 @@ Repozitorij z gradivi za projekt pri predmetu APPR v študijskem letu 2019/20
 
 ## Tematika
 
-Izbrali si boste temo, s katero se bo vaš projekt ukvarjal.
-Tukaj boste napisali, kje ste dobili podatke, ter kakšen je vaš cilj.
+Osnovna ideja: poiskati povezave in medsebojne vplive določenih spremenljivk (npr. dohodek, urbanost/ruralnost, turizem, tipi lastništva, leto izgradnje itd.) z opremljenostjo stanovanj po slovenskih občinah (oz. ponekod po statističnih regijah)
+
+Število podatkovnih enot – število občin cca. 210
+
+Časovno obdobje: največ podatkov za leta 2011,2015,2018, torej od 2011 do 2018
+
+Oblike vhodnih podatkov:
+-	Csv – z različnimi ločili 
+-	Xml – excel preglednica 
+-	Json datoteka
+-	Json-stat datoteka
+-	Excel datoteka
+
+Vir podatkov: SiStat (v oklepajih številke virov)
+
+Osnovni podatki:
+-	napeljave: vodovod, kanalizacija, električni tok, centralno ogrevanje (1)
+-	pomožni prostori: kopalnica, stranišče, kuhinja (1)
+-	povprečna uporabna površina m2 na stanovalca, delež stanovanj z manj kot 10m2 uporabne površine na osebo (2,4)
+-	delež naseljenih stanovanj ki nimajo vseh elementov osnovne infrastrukture (2)
+-	število sob, število oseb (3)
+-	ogrevanja: centralno, daljinsko, ni ogrevanja, drugo ogrevanje (5)
+-	stanovanja brez: kopalnice, notranjega stranišča, kuhinje (6)
+-	stanovanja brez: centralnega ogrevanja, vode, elektrike, priklopa na javno kanalizacijo (7)
+
+Spremenljivke: (niso vsi podatki po občinah, nekateri po statističnih regijah(13))
+-	dohodek (10)
+-	urbanost /ruralnost (?)
+-	turizem (17)
+-	stanovanjski stroški kot breme (8), preživetje gospodinjstev s svojimi prihodki (9)
+-	tip lastništva: lastniška, najeta, drugi tipi (11)
+-	gostota naseljenosti (12)
+-	starost oz. leto izgradnje (13)
+-	stanovanjske razmere: svetlost, hrup, onesnaženost, kriminal itd. (14)
+-	izbrane dobrine: telefon, tv, računalnik pralni stroj, avto (15)
+-	prenaseljenost stanovanja (16)
+
+Zasnova podatkovnega modela:
+-	ime tabele: stolpci (vsaka tabela 3-krat in sicer za leta 2011,2015,2018)
+-	Stanovanja brez osnovne infrastrukture glede na finančno stanje: brez osnovne infrastrukture, dohodek, stanovanjski stroški kot breme, preživetje gospodinjstev s svojimi prihodki
+-	Število sob in stanovalcev glede na naseljenost: število sob, število oseb, uporabna površina, gostota naseljenosti, prenaseljenost stanovanja
+-	Opremljenost stanovanj z napeljavo in ogrevanjem glede na okoliščine: napeljave, ogrevanja, urbanost/ruralnost, starost oz. leto izgradnje
+-	Neopremljenost stanovanj (brez) glede na stanovanjske razmere: stanovanja brez kopalnice, notranjega stranišča kuhinja in centralnega ogrevanja, vode, elektrike, priklopa na javno kanalizacijo, stanovanjske razmere, izbrane dobrine
+-	Stanovanja brez osnovne infrastrukture po tipu lastništva in turizmu občine: brez osnovne infrastrukture, tip lastništva, turizem
+
+Plan dela: 
+-	Razvrščanje podatkov (iskanje občin s podobnimi lastnostmi):
+o	po dohodku
+o	turizmu
+o	letu izgradnje stanovanj
+o	tipu lastništva
+o	urbane in ruralne občine
+o	gostota naseljenosti
+-	Predikcija (napovedovanje časovne vrste, trendi): 
+o	napovedovanje razvoja opremljenosti stanovanj in občin
+o	večja opremljenost, večji dohodki (inflacija)
+o	večanje gostote v urbanih občinah in zmanjševanje le-te v ruralnih (slabša opremljenost na deželi, boljša v mestih)
+o	slabša opremljenost starih stanovanj in boljša novih
+o	opremljenost glede na razvoj turizma
+
 
 ## Program
 
