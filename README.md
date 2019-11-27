@@ -46,13 +46,8 @@ Zasnova podatkovnega modela:
 -	Tabela 4: Kazalniki razvoja občin: povprečna uporabna površina stanovanj, število stanovanj na 1000 prebivalcev, tri ali več sobna stanovanja, povprečna mesečna neto plača, gostota prebivalstva, povprečna starost prebivalstva, stopnja registrirane brezposelnosti. 
 
 Plan dela: 
--	Razvrščanje podatkov (iskanje občin s podobnimi lastnostmi):
-o	po opremljenosti,
-o	po razmerah,
--	Predikcija (napovedovanje časovne vrste, trendi): 
-o	napovedovanje razvoja opremljenosti stanovanj glede na razvitost občine,
-o	večja opremljenost <- večje neto plače,
-o	slabše/boljše razmere <– večja/manjša gostota naseljenosti občine.
+-	Razvrščanje podatkov (iskanje občin s podobnimi lastnostmi): po opremljenosti, po razmerah,
+-	Predikcija (napovedovanje časovne vrste, trendi): napovedovanje razvoja opremljenosti stanovanj glede na razvitost občine, večja opremljenost <- večje neto plače, slabše/boljše razmere <– večja/manjša gostota naseljenosti občine.
 
 
 ## Program
