@@ -1,4 +1,4 @@
-# Analiza opremljenosti stanovanj po slovenskih občinah (v letih od 2011 do 2018)
+# Analiza stanovanjskih razmer in opremljenosti stanovanj po občinah v Sloveniji
 Repozitorij z gradivi za projekt pri predmetu APPR v študijskem letu 2019/20
 
 * [![Shiny](http://mybinder.org/badge.svg)](http://mybinder.org/v2/gh/jaanos/APPR-2019-20/master?urlpath=shiny/APPR-2019-20/projekt.Rmd) Shiny
@@ -6,65 +6,53 @@ Repozitorij z gradivi za projekt pri predmetu APPR v študijskem letu 2019/20
 
 ## Tematika
 
-Osnovna ideja: poiskati povezave in medsebojne vplive določenih spremenljivk (npr. dohodek, urbanost/ruralnost, turizem, tipi lastništva, leto izgradnje itd.) z opremljenostjo stanovanj po slovenskih občinah (oz. ponekod po statističnih regijah)
-
-Število podatkovnih enot – število občin cca. 210
-
-Časovno obdobje: največ podatkov za leta 2011,2015,2018, torej od 2011 do 2018
+Vir: SiStat
 
 Oblike vhodnih podatkov:
 -	Csv – z različnimi ločili 
 -	Xml – excel preglednica 
 -	Json datoteka
--	Json-stat datoteka
 -	Excel datoteka
 
-Vir podatkov: SiStat (v oklepajih številke virov)
+Osnovna ideja: 
+-	analizirati osnovne indikatorje opremljenosti stanovanj po občinah (napeljave, prostori, površine, …) za leto 2015 (napeljave za zadnje razpoložljivo leto 2010),
+-	analizirati druge indikatorje (razvoja) občin (neto plače, brezposelnost, gostota prebivalstva, starost prebivalstva) za leto 2015,
+-	poiskati povezave (korelacije) med izbranimi spremenljivkami za leto 2015,
+-	ugotoviti medsebojne vplive (regresije) določenih spremenljivk (npr. vpliv brezposelnosti na opremljenost ali vpliv starosti prebivalstva na opremljenost) za leto 2015,
+-	analizirati časovno serijo za napeljave  (2002-2010, letni podatki).
 
-Osnovni podatki:
--	napeljave: vodovod, kanalizacija, električni tok, centralno ogrevanje (1)
--	pomožni prostori: kopalnica, stranišče, kuhinja (1)
--	povprečna uporabna površina m2 na stanovalca, delež stanovanj z manj kot 10m2 uporabne površine na osebo (2,4)
--	delež naseljenih stanovanj ki nimajo vseh elementov osnovne infrastrukture (2)
--	število sob, število oseb (3)
--	ogrevanja: centralno, daljinsko, ni ogrevanja, drugo ogrevanje (5)
--	stanovanja brez: kopalnice, notranjega stranišča, kuhinje (6)
--	stanovanja brez: centralnega ogrevanja, vode, elektrike, priklopa na javno kanalizacijo (7)
+Število podatkovnih enot: število občin 211 (oziroma manj v kolikor bodo podatki manjkajoči)
 
-Spremenljivke: (niso vsi podatki po občinah, nekateri po statističnih regijah(13))
--	dohodek (10)
--	urbanost /ruralnost (?)
--	turizem (17)
--	stanovanjski stroški kot breme (8), preživetje gospodinjstev s svojimi prihodki (9)
--	tip lastništva: lastniška, najeta, drugi tipi (11)
--	gostota naseljenosti (12)
--	starost oz. leto izgradnje (13)
--	stanovanjske razmere: svetlost, hrup, onesnaženost, kriminal itd. (14)
--	izbrane dobrine: telefon, tv, računalnik pralni stroj, avto (15)
--	prenaseljenost stanovanja (16)
+Spremenljivke opremljenosti:
+-	napeljave: vodovod, kanalizacija, električni tok, centralno ogrevanje (2002-2010) (1),
+-	delež naseljenih stanovanj ki nimajo vseh elementov osnovne infrastrukture (2),
+-	število sob, število oseb (2011,2015,2018)(3),
+-	povprečna uporabna površina stanovanj m2 (4),
+-	število stanovanj na 1000 prebivalcev (4),
+-	tri ali več sobna stanovanja (% vseh) (4).
+
+Druge spremenljivke občin: 
+-	povprečna mesečna neto plača (4),
+-	gostota prebivalstva (4),
+-	povprečna starost prebivalstva (4),
+-	stopnja registrirane brezposelnosti (4). 
 
 Zasnova podatkovnega modela:
--	ime tabele: stolpci (vsaka tabela 3-krat in sicer za leta 2011,2015,2018)
--	Stanovanja brez osnovne infrastrukture glede na finančno stanje: brez osnovne infrastrukture, dohodek, stanovanjski stroški kot breme, preživetje gospodinjstev s svojimi prihodki
--	Število sob in stanovalcev glede na naseljenost: število sob, število oseb, uporabna površina, gostota naseljenosti, prenaseljenost stanovanja
--	Opremljenost stanovanj z napeljavo in ogrevanjem glede na okoliščine: napeljave, ogrevanja, urbanost/ruralnost, starost oz. leto izgradnje
--	Neopremljenost stanovanj (brez) glede na stanovanjske razmere: stanovanja brez kopalnice, notranjega stranišča kuhinja in centralnega ogrevanja, vode, elektrike, priklopa na javno kanalizacijo, stanovanjske razmere, izbrane dobrine
--	Stanovanja brez osnovne infrastrukture po tipu lastništva in turizmu občine: brez osnovne infrastrukture, tip lastništva, turizem
+-	vrstice = občine
+-	stolpci = spremenljivke
+-	Tabela 1: Napeljave: vodovod, kanalizacija, električni tok, centralno ogrevanje,
+-	Tabela 2: Delež naseljenih stanovanj brez osnovne infrastrukture: centralno ogrevanje, voda, elektrika, priklop na javno kanalizacijo,
+-	Tabela 3: Število naseljenih stanovanj po številu sob in številu oseb: 1,2,3,4,5 sob ali več, 1,2,3,4,5,6,7 oseb ali več,
+-	Tabela 4: Kazalniki razvoja občin: povprečna uporabna površina stanovanj, število stanovanj na 1000 prebivalcev, tri ali več sobna stanovanja, povprečna mesečna neto plača, gostota prebivalstva, povprečna starost prebivalstva, stopnja registrirane brezposelnosti. 
 
 Plan dela: 
 -	Razvrščanje podatkov (iskanje občin s podobnimi lastnostmi):
-o	po dohodku
-o	turizmu
-o	letu izgradnje stanovanj
-o	tipu lastništva
-o	urbane in ruralne občine
-o	gostota naseljenosti
+o	po opremljenosti,
+o	po razmerah,
 -	Predikcija (napovedovanje časovne vrste, trendi): 
-o	napovedovanje razvoja opremljenosti stanovanj in občin
-o	večja opremljenost, večji dohodki (inflacija)
-o	večanje gostote v urbanih občinah in zmanjševanje le-te v ruralnih (slabša opremljenost na deželi, boljša v mestih)
-o	slabša opremljenost starih stanovanj in boljša novih
-o	opremljenost glede na razvoj turizma
+o	napovedovanje razvoja opremljenosti stanovanj glede na razvitost občine,
+o	večja opremljenost <- večje neto plače,
+o	slabše/boljše razmere <– večja/manjša gostota naseljenosti občine.
 
 
 ## Program
