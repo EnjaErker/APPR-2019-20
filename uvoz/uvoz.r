@@ -1,6 +1,29 @@
 # 2. faza: Uvoz podatkov
 
+library(knitr)
+library(rvest)
+library(gsubfn)
+library(tidyr)
+library(shiny)
+library(readr)
+#library(readx1)
+#library(xlsx)
+
 sl <- locale("sl", decimal_mark=",", grouping_mark=".")
+
+#funkcija, ki uvozi csv datoteko z napeljavami
+napeljave_2002 <- read_csv("podatki/napeljave_2002.csv")
+napeljave_2002 <- read_csv2("podatki/napeljave_2002.csv", na="-", locale=locale(encoding="Windows-1250"), col_names=c("obcina", "vodovod", "kanalizacija", "elektricni tok", "centralno ogrevanje", "kopalnica", "stranisce", "kuhinja") )
+
+#funkcija, ki uvozi excel datoteko z kazalniki
+kazalniki <- read_xlsx("podatki/kazalniki.xlsx")
+
+#funkcija, ki uvozi json datoteko s stevilom oseb in sob
+st_sob_oseb <- read_json("podatki/st_sob_oseb.json",na="-", locale=locale(encoding="Windows-1250"))
+
+#funkcija, ki uvozi xml datoteko o naseljenosti in pomankljivostih
+naseljenost_in_pomanjkljivosti <- read_xml("podatki/naseljenost_in_pomanjkljivosti.xml", na="-", locale=locale(encoding="Windows-1250"))
+
 
 # Funkcija, ki uvozi občine iz Wikipedije
 uvozi.obcine <- function() {
