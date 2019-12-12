@@ -8,23 +8,25 @@ library(shiny)
 library(readr)
 library(readx1)
 library(xlsx)
+library(rjson)
+library(jsonlite)
+library(XML)
 
 sl <- locale("sl", decimal_mark=",", grouping_mark=".")
 
 #Funkcija, ki uvozi csv datoteko z napeljavami
 napeljave <- read_csv2("podatki/napeljave.csv", skip =1, na="-", locale=locale(encoding="Windows-1250"))
 
-
 col_names=c("obcina", "vodovod", "kanalizacija", "elektricni tok", "centralno ogrevanje", "kopalnica", "stranisce", "kuhinja") )
 
 #Funkcija, ki uvozi excel datoteko z kazalniki
-kazalniki <- read.xlsx("podatki/kazalniki.xlsx", sheetIndex=1, startRow =2, colNames=TRUE, rowNames=FALSE)
+kazalniki <- read.xlsx("podatki/kazalniki.xlsx", sheetIndex=1, startRow =2, colNames=TRUE, rowNames=FALSE, encoding="UTF-8")
 
 #Funkcija, ki uvozi json datoteko s stevilom oseb in sob
-st_sob_oseb <- read_json("podatki/st_sob_oseb.json",na="-", locale=locale(encoding="Windows-1250"))
+st_oseb_sob <- fromJSON("podatki/stevilo_oseb_sob.json")
 
 #Funkcija, ki uvozi xml datoteko o pomankljivostih
-pomankljivosti <- read_xml("podatki/pomankljivosti.xml", skip=4, na="-", locale=locale(encoding="Windows-1250"))
+pomankljivosti <- read_xml("podatki/pomankljivosti.xml")
 
 col_names=c(1,"obcina", "stevilo vseh stanovanj", "brez centralnega ogrevanja", "brez vode", "brez elektrike", "brez priklopa na javno kanalizacijo"),
 
