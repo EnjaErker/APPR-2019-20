@@ -1,14 +1,54 @@
-# Analiza podatkov s programom R, 2019/20
-fgfd
-Repozitorij z gradivi pri predmetu APPR v študijskem letu 2019/20
+# Analiza stanovanjskih razmer in opremljenosti stanovanj po občinah v Sloveniji
+Repozitorij z gradivi za projekt pri predmetu APPR v študijskem letu 2019/20
 
 * [![Shiny](http://mybinder.org/badge.svg)](http://mybinder.org/v2/gh/jaanos/APPR-2019-20/master?urlpath=shiny/APPR-2019-20/projekt.Rmd) Shiny
 * [![RStudio](http://mybinder.org/badge.svg)](http://mybinder.org/v2/gh/jaanos/APPR-2019-20/master?urlpath=rstudio) RStudio
 
 ## Tematika
 
-Izbrali si boste temo, s katero se bo vaš projekt ukvarjal.
-Tukaj boste napisali, kje ste dobili podatke, ter kakšen je vaš cilj.
+Vir: SiStat
+
+Oblike vhodnih podatkov:
+-	Csv – z različnimi ločili 
+-	Xml – excel preglednica 
+-	Json datoteka
+-	Excel datoteka
+
+Osnovna ideja: 
+-	analizirati osnovne indikatorje opremljenosti stanovanj po občinah (napeljave, prostori, površine, …) za leto 2015 (napeljave za zadnje razpoložljivo leto 2010),
+-	analizirati druge indikatorje (razvoja) občin (neto plače, brezposelnost, gostota prebivalstva, starost prebivalstva) za leto 2015,
+-	poiskati povezave (korelacije) med izbranimi spremenljivkami za leto 2015,
+-	ugotoviti medsebojne vplive (regresije) določenih spremenljivk (npr. vpliv brezposelnosti na opremljenost ali vpliv starosti prebivalstva na opremljenost) za leto 2015,
+-	analizirati časovno serijo za napeljave  (2002-2010, letni podatki).
+
+Število podatkovnih enot: število občin 211 (oziroma manj v kolikor bodo podatki manjkajoči)
+
+Spremenljivke opremljenosti:
+-	napeljave: vodovod, kanalizacija, električni tok, centralno ogrevanje (2002-2010) (1),
+-	delež naseljenih stanovanj ki nimajo vseh elementov osnovne infrastrukture (2),
+-	število sob, število oseb (2011,2015,2018)(3),
+-	povprečna uporabna površina stanovanj m2 (4),
+-	število stanovanj na 1000 prebivalcev (4),
+-	tri ali več sobna stanovanja (% vseh) (4).
+
+Druge spremenljivke občin: 
+-	povprečna mesečna neto plača (4),
+-	gostota prebivalstva (4),
+-	povprečna starost prebivalstva (4),
+-	stopnja registrirane brezposelnosti (4). 
+
+Zasnova podatkovnega modela:
+-	vrstice = občine
+-	stolpci = spremenljivke
+-	Tabela 1: Napeljave: vodovod, kanalizacija, električni tok, centralno ogrevanje,
+-	Tabela 2: Delež naseljenih stanovanj brez osnovne infrastrukture: centralno ogrevanje, voda, elektrika, priklop na javno kanalizacijo,
+-	Tabela 3: Število naseljenih stanovanj po številu sob in številu oseb: 1,2,3,4,5 sob ali več, 1,2,3,4,5,6,7 oseb ali več,
+-	Tabela 4: Kazalniki razvoja občin: povprečna uporabna površina stanovanj, število stanovanj na 1000 prebivalcev, tri ali več sobna stanovanja, povprečna mesečna neto plača, gostota prebivalstva, povprečna starost prebivalstva, stopnja registrirane brezposelnosti. 
+
+Plan dela: 
+-	Razvrščanje podatkov (iskanje občin s podobnimi lastnostmi): po opremljenosti, po razmerah,
+-	Predikcija (napovedovanje časovne vrste, trendi): napovedovanje razvoja opremljenosti stanovanj glede na razvitost občine, večja opremljenost <- večje neto plače, slabše/boljše razmere <– večja/manjša gostota naseljenosti občine.
+
 
 ## Program
 
