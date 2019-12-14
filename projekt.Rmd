@@ -1,5 +1,6 @@
 ---
 title: "Poročilo pri predmetu Analiza podatkov s programom R"
+subtitle: "Analiza stanovanjskih razmer in opremljenosti stanovanj po občinah v Sloveniji"
 author: "Enja Erker"
 output:
   html_document: default
@@ -26,11 +27,19 @@ source("lib/rstudio.r", encoding="UTF-8")
 
 # Izbira teme
 
-Za vzorec bomo prikazali nekaj podatkov o slovenskih občinah.
+Tema: stanovanjske razmere in opremljenost stanovanj (po občinah v Sloveniji)
 
-![](slike/grb.png)
+Osnovna ideja: 
+-	analizirati osnovne indikatorje opremljenosti stanovanj po občinah (napeljave, prostori, površine, …) za leto 2015 (napeljave za zadnje razpoložljivo leto 2010),
+-	analizirati druge indikatorje (razvoja) občin (neto plače, brezposelnost, gostota prebivalstva, starost prebivalstva) za leto 2015,
+-	poiskati povezave (korelacije) med izbranimi spremenljivkami za leto 2015,
+-	ugotoviti medsebojne vplive (regresije) določenih spremenljivk (npr. vpliv brezposelnosti na opremljenost ali vpliv starosti prebivalstva na opremljenost) za leto 2015,
+-	analizirati časovno serijo za napeljave  (2002-2010, letni podatki).
 
-***
+Plan dela: 
+-	Razvrščanje podatkov (iskanje občin s podobnimi lastnostmi): po opremljenosti, po razmerah,
+-	Predikcija (napovedovanje časovne vrste, trendi): napovedovanje razvoja opremljenosti stanovanj glede na razvitost občine, večja opremljenost <- večje neto plače, slabše/boljše razmere <– večja/manjša gostota naseljenosti občine.
+
 
 # Obdelava, uvoz in čiščenje podatkov
 
@@ -38,9 +47,68 @@ Za vzorec bomo prikazali nekaj podatkov o slovenskih občinah.
 source("uvoz/uvoz.r", encoding="UTF-8")
 ```
 
-Uvozili smo podatke o občinah v obliki CSV s statističnega urada ter v obliki HTML
-z Wikipedije. Podatke imamo v dveh razpredelnicah v obliki *tidy data*.
+Oblike vhodnih podatkov:
+-	Csv – z različnimi ločili 
+-	Xml – excel preglednica 
+-	Json datoteka
+-	Excel datoteka
 
+Spletne strani oziroma viri podatkov:
+
+1.	https://pxweb.stat.si/SiStatDb/pxweb/sl/20_Ekonomsko/20_Ekonomsko__19_gradbenistvo__95_arhivski_podatki__06_19071_stanov_sklad/1907104S.px/
+2.	https://pxweb.stat.si/SiStatDb/pxweb/sl/10_Dem_soc/10_Dem_soc__08_zivljenjska_raven__25_STANOVANJA__02_08611-stanovanja_OBC/0861140S.px/
+3.	https://pxweb.stat.si/SiStatDb/pxweb/sl/10_Dem_soc/10_Dem_soc__08_zivljenjska_raven__25_STANOVANJA__02_08611-stanovanja_OBC/0861104S.px/
+4.	https://www.stat.si/obcine
+
+Podatki so v štirih razpredelnicah, sprva še niso v obliki *tidy data*.
+
+1. `napeljave` - podatki o napeljavah za vsako občino
+  - `občina` - imenska spremenljivka: ime občine (neurejen faktor, character)
+  - `vodovod` - meritev: število stanovanj z vodovodom (število, integer)
+  - `kanalizacija` - meritev: število stanovanj s kanalizacijo (število, integer) 
+  - `električni tok` - meritev: število stanovanj z električnim tokom (število, integer)
+  - `centralno ogrevanje` - meritev: število stanovanj z centralnim ogrevanjem (število, integer)
+  - `kopalnica` - meritev: število stanovanj s kopalnico (število, integer)
+  - `stranišče` - meritev: število stanovanj s straniščem (število, integer)
+  - `kuhinja` - meritev: število stanovanj z kuhinjo (število, integer)
+
+2. `kazalniki` - podatki o statističnih kazalniki za vsako občino
+  - `občina` - imenska spremenljivka: ime občine (neurejen faktor, character)
+  - `gostota prebivalstva (preb/km2)` - meritev: gostota prebivalstva v enotah prebivalcev na kvadratni kilometer (število, numeric)
+  - `povprečna mesečna neto plača (indeks)` - meritev: povprečna mesečna neto plača podana v indeksu (število, integer) 
+  - `stopnja registrirane brezposelnosti (odstotek)` - meritev: stopnja registrirane brezposelnosti podana v odstotkih (število, numeric)
+  - `število stanovanj (na 1000 prebivalcev)` - meritev: število stanovanj v posamezni občini, podano na 1000 prebivalcev (število, integer)
+
+#preveri izgled tabele!
+3. `število oseb in sob` - podatki o številu oseb in sob v stanovanjih za vsako občino
+  - `občina` - imenska spremenljivka: ime občine (neurejen faktor, character)
+  - `število sob` - številska spremenljivka: število sob v stanovanju (1, 2, 3, 4, 5 ali več) (število, integer)
+  - `število oseb` - številska spremenljivka: število oseb v stanovanju (1, 2, 3, 4, 5, 6, 7 ali več) (število, integer)
+
+4. `pomankljivosti` - podatki o pomankljivostih stanovanj za vsako občino
+  - `občina` - imenska spremenljivka: ime občine (neurejen faktor, character)
+  - `število vseh stanovanj` - meritev: število vseh stanovanj (število, integer)
+  - `število stanovanj brez centralnega ogrevanja` - meritev: število stanovanj brez centralnega ogrevanja (število, integer) 
+  - `število stanovanj brez vode` - meritev: število stanovanj brez vode (število, integer)
+  - `število stanovanj brez elektrike` - meritev: število stanovanj brez elektrike (število, integer)
+  - `število stanovanj brez priklopa na javno kanalizacijo` - meritev: število stanovanj brez priklopa na javno kanalizacijo (število, integer)
+
+Pretvorba razpredelnic v *tidy data*
+
+1.`napeljave`
+  - izbris vrstic (občin) s pomankljivimi podatki 
+
+2.`kazalniki`
+  - izbris zadnjih dveh stolpcev, ki jih ne potrebujem
+
+3.`število oseb in sob`
+  -
+
+4.`pomankljivosti`
+  - 
+
+
+#vzorčni podatki
 1. `druzine` - podatki o družinah za vsako občino
   - `obcina` - spremenljivka: ime občine (neurejen faktor),
   - `velikost.druzine` - spremenljivka: število otrok v družini (število: 1, 2, 3 ali 4, kjer zadnja vrednost pomeni 4 ali več),
@@ -70,6 +138,10 @@ ggplot(obcine, aes(x=naselja)) + geom_histogram() +
 
 # Analiza in vizualizacija podatkov
 
+library(ggplot2)
+library(dplyr)
+
+#vzorčni primer
 ```{r vizualizacija, echo=FALSE, message=FALSE, warning=FALSE, results='hide'}
 source("vizualizacija/vizualizacija.r", encoding="UTF-8")
 ```
