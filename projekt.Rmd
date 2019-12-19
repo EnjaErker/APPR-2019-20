@@ -141,6 +141,23 @@ ggplot(obcine, aes(x=naselja)) + geom_histogram() +
 library(ggplot2)
 library(dplyr)
 
+#črtni diagram za napeljave 
+vodovod <- napeljave[,c(1,2,9,16,23,30,37,44)]
+kanalizacija <- napeljave[,c(1,3,10,17,24,31,38,45)]
+električni_tok <- napeljave[,c(1,4,11,18,25,32,39,46)]
+centralno_ogrevanje <- napeljave[,c(1,5,12,19,26,33,40,47)]
+kopalnica <- napeljave[,c(1,6,13,20,27,34,41,48)]
+stranišče <- napeljave[,c(1,7,14,21,28,35,42,49)]
+kuhinja <- napeljave[,c(1,8,15,22,29,36,43,50)]
+
+
+
+
+g_range <- range(0,vodovod)
+plot(vodovod, type="o", col="blue",ylim=g_range,axes=FALSE, ann=FALSE)
+axis(1, at=1:7, lab=c("2002","2003","2004","2005","2006","2007","2008"))
+
+
 #vzorčni primer
 ```{r vizualizacija, echo=FALSE, message=FALSE, warning=FALSE, results='hide'}
 source("vizualizacija/vizualizacija.r", encoding="UTF-8")
