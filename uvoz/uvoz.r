@@ -33,16 +33,9 @@ napeljave <- read_csv2("podatki/napeljave.csv", skip =1, na="-", locale=locale(e
 
 #poimenovanje prvega stolpca
 names(napeljave)[1]<-("Občina")
-#izbris obcin s pomankljivmi podatki (NA ali z)
+#izbris obcin s pomankljivmi podatki (NA)
 napeljave <- na.omit(napeljave)
-
-
-
-
-#napeljave[~napeljave.applymap(np.isreal).all(1)]
-#napeljave <- napeljave[!(my_dataframe = "z") ,]
-#napeljave = napeljave.replace('z', np.nan).dropna()
-#napeljave <- filter(napeljave, undesirable == z)
+#izbris obcin s pomankljivmi podatki (z)
 
 
 #KAZALNIKI
@@ -58,19 +51,24 @@ kazalniki=select(kazalniki,-6,-7)
 
 #ŠTEVILO OSEB IN SOB
 
-#Funkcija, ki uvozi json datoteko s stevilom oseb in sob
+#Funkcija, ki uvozi csv datoteko s stevilom oseb in sob
 st_oseb_sob <- read_csv2("podatki/st_oseb_in_sob.csv", skip =2, na="-", locale=locale(encoding="Windows-1250"))
 
 
 #POMANKLJIVOSTI
 
-#Funkcija, ki uvozi xml datoteko o pomankljivostih
-pomankljivosti <- read_xml("podatki/pomankljivosti.xml", encoding="Windows-1250")
-pomankljivosti <- xmlParse(file = "podatki/pomankljivosti.xml", encoding="Windows-1250")
+#Funkcija, ki uvozi excel datoteko o pomankljivostih
+pomankljivosti <- read.xlsx("podatki/pomankljivosti1.xlsx", sheetIndex=1, startRow=4,encoding="UTF-8")
+
+#poimenovanje stolpcev
+names(pomankljivosti) <- c("Občina", "Število vseh stanovanj","Število stanovanj brez centralnega ogrevanja", "Število stanovanj brez vode", "Število stanovanj brez elektrike", "Število stanovanj brez priklopa na javno kanalizacijo")
+
+#izbris zadnjih 20 vrstic z nepomembnimi podatki
+pomankljivosti=pomankljivosti[ -c(213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233), ]
 
 
-col_names=c(1,"obcina", "stevilo vseh stanovanj", "brez centralnega ogrevanja", "brez vode", "brez elektrike", "brez priklopa na javno kanalizacijo"),
 
+ 
 
 
 

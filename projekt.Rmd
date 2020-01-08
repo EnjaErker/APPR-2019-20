@@ -48,9 +48,7 @@ source("uvoz/uvoz.r", encoding="UTF-8")
 ```
 
 Oblike vhodnih podatkov:
--	Csv – z različnimi ločili 
--	Xml – excel preglednica 
--	Json datoteka
+-	Csv datoteka z različnimi ločili 
 -	Excel datoteka
 
 Spletne strani oziroma viri podatkov:
@@ -96,16 +94,19 @@ Podatki so v štirih razpredelnicah, sprva še niso v obliki *tidy data*.
 Pretvorba razpredelnic v *tidy data*
 
 1.`napeljave`
-  - izbris vrstic (občin) s pomankljivimi podatki 
+  - poimenovanje prvega stolpca
+  - izbris vrstic (občin) s pomankljivimi podatki (v konkretnem primeru NA ali z)
 
 2.`kazalniki`
+  - poimenovanje stolpcev
   - izbris zadnjih dveh stolpcev, ki jih ne potrebujem
 
 3.`število oseb in sob`
   -
 
 4.`pomankljivosti`
-  - 
+  - poimenovanje stolpcev
+  - izbris zadnjih 20 vrstic z nepomembnimi podatki
 
 
 #vzorčni podatki
@@ -140,6 +141,12 @@ ggplot(obcine, aes(x=naselja)) + geom_histogram() +
 
 library(ggplot2)
 library(dplyr)
+
+#pomankljivosti
+a <- vektor vsot po stolpcih
+apply(pomankljivosti[-1], 2, sum)
+
+
 
 #črtni diagram za napeljave 
 vodovod <- napeljave[,c(1,2,9,16,23,30,37,44)]
