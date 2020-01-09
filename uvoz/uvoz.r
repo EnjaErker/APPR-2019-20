@@ -36,7 +36,8 @@ names(napeljave)[1]<-("Občina")
 #izbris obcin s pomankljivmi podatki (NA)
 napeljave <- na.omit(napeljave)
 #izbris obcin s pomankljivmi podatki (z)
-
+row_sub = apply(napeljave, 1, function(row) all(row !='z' ))
+napeljave <- napeljave[row_sub,]
 
 #KAZALNIKI
 
@@ -54,6 +55,9 @@ kazalniki=select(kazalniki,-6,-7)
 #Funkcija, ki uvozi csv datoteko s stevilom oseb in sob
 st_oseb_sob <- read_csv2("podatki/st_oseb_in_sob.csv", skip =2, na="-", locale=locale(encoding="Windows-1250"))
 
+#poimenovanje stolpcev
+names(st_oseb_sob) <- c("Občina", "Število sob", "Število oseb", "Število stanovanj") 
+
 
 #POMANKLJIVOSTI
 
@@ -62,7 +66,6 @@ pomankljivosti <- read.xlsx("podatki/pomankljivosti1.xlsx", sheetIndex=1, startR
 
 #poimenovanje stolpcev
 names(pomankljivosti) <- c("Občina", "Število vseh stanovanj","Število stanovanj brez centralnega ogrevanja", "Število stanovanj brez vode", "Število stanovanj brez elektrike", "Število stanovanj brez priklopa na javno kanalizacijo")
-
 #izbris zadnjih 20 vrstic z nepomembnimi podatki
 pomankljivosti=pomankljivosti[ -c(213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233), ]
 
