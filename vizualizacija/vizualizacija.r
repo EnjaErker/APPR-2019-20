@@ -108,7 +108,7 @@ names(koef_rast_kuhinja) <- c("Gostota","2003","2004","2005","2006","2007","2008
 koef_rast_kuhinja[4,6] <- 0.4
 k1 <- c(k1[1],k1[2],k1[3],0.4)
 
-#grafi: odvisnost koeficientov rasti glede na leto
+#grafi: odvisnost koeficientov rasti glede na leto za kuhinje
 
 leto <- c("2003","2004","2005","2006","2007","2008")
 st1 <- c(g1[1],h1[1],i1[1],j1[1],k1[1],l1[1])
