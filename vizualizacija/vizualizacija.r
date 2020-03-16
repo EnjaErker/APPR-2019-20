@@ -96,67 +96,6 @@ plot(prikaz_pomankljivo_opremljenih_stanovanj)
 
 #NAPELJAVE
 
-#koeficienti rasti po letih za kanalizacijo
-a <- round((kanalizacija_sort$'2003' - kanalizacija_sort$'2002')/(kanalizacija_sort$'2002')*100,2)
-b <- round((kanalizacija_sort$'2004' - kanalizacija_sort$'2003')/(kanalizacija_sort$'2003')*100,2)
-c <- round((kanalizacija_sort$'2005' - kanalizacija_sort$'2004')/(kanalizacija_sort$'2004')*100,2)
-d <- round((kanalizacija_sort$'2006' - kanalizacija_sort$'2005')/(kanalizacija_sort$'2005')*100,2)
-e <- round((kanalizacija_sort$'2007' - kanalizacija_sort$'2006')/(kanalizacija_sort$'2006')*100,2)
-f <- round((kanalizacija_sort$'2008' - kanalizacija_sort$'2007')/(kanalizacija_sort$'2007')*100,2)
-koef_rast_kanalizacija  <- data.table(Gostota,a,b,c,d,e,f)
-names(koef_rast_kanalizacija) <- c("Gostota","2003","2004","2005","2006","2007","2008")
-
-#koeficienti rasti po letih za vodovod
-g <- round((vodovod_sort$'2003' - vodovod_sort$'2002')/(vodovod_sort$'2002')*100,2)
-h <- round((vodovod_sort$'2004' - vodovod_sort$'2003')/(vodovod_sort$'2003')*100,2)
-i <- round((vodovod_sort$'2005' - vodovod_sort$'2004')/(vodovod_sort$'2004')*100,2)
-j <- round((vodovod_sort$'2006' - vodovod_sort$'2005')/(vodovod_sort$'2005')*100,2)
-k <- round((vodovod_sort$'2007' - vodovod_sort$'2006')/(vodovod_sort$'2006')*100,2)
-l <- round((vodovod_sort$'2008' - vodovod_sort$'2007')/(vodovod_sort$'2007')*100,2)
-koef_rast_vodovod  <- data.table(Gostota,g,h,i,j,k,l)
-names(koef_rast_vodovod) <- c("Gostota","2003","2004","2005","2006","2007","2008")
-
-#koeficienti rasti po letih za električni_tok
-m <- round((električni_tok_sort$'2003' - električni_tok_sort$'2002')/(električni_tok_sort$'2002')*100,2)
-n <- round((električni_tok_sort$'2004' - električni_tok_sort$'2003')/(električni_tok_sort$'2003')*100,2)
-o <- round((električni_tok_sort$'2005' - električni_tok_sort$'2004')/(električni_tok_sort$'2004')*100,2)
-p <- round((električni_tok_sort$'2006' - električni_tok_sort$'2005')/(električni_tok_sort$'2005')*100,2)
-r <- round((električni_tok_sort$'2007' - električni_tok_sort$'2006')/(električni_tok_sort$'2006')*100,2)
-s <- round((električni_tok_sort$'2008' - električni_tok_sort$'2007')/(električni_tok_sort$'2007')*100,2)
-koef_rast_električni_tok  <- data.table(Gostota,m,n,o,p,r,s)
-names(koef_rast_električni_tok) <- c("Gostota","2003","2004","2005","2006","2007","2008")
-
-#koeficienti rasti po letih za centralno_ogrevanje
-š <- round((centralno_ogrevanje_sort$'2003' - centralno_ogrevanje_sort$'2002')/(centralno_ogrevanje_sort$'2002')*100,2)
-t <- round((centralno_ogrevanje_sort$'2004' - centralno_ogrevanje_sort$'2003')/(centralno_ogrevanje_sort$'2003')*100,2)
-u <- round((centralno_ogrevanje_sort$'2005' - centralno_ogrevanje_sort$'2004')/(centralno_ogrevanje_sort$'2004')*100,2)
-v <- round((centralno_ogrevanje_sort$'2006' - centralno_ogrevanje_sort$'2005')/(centralno_ogrevanje_sort$'2005')*100,2)
-z <- round((centralno_ogrevanje_sort$'2007' - centralno_ogrevanje_sort$'2006')/(centralno_ogrevanje_sort$'2006')*100,2)
-ž <- round((centralno_ogrevanje_sort$'2008' - centralno_ogrevanje_sort$'2007')/(centralno_ogrevanje_sort$'2007')*100,2)
-koef_rast_centralno_ogrevanje  <- data.table(Gostota,š,t,u,v,z,ž)
-names(koef_rast_centralno_ogrevanje) <- c("Gostota","2003","2004","2005","2006","2007","2008")
-
-#koeficienti rasti po letih za kopalnica
-š1 <- round((kopalnica_sort$'2003' - kopalnica_sort$'2002')/(kopalnica_sort$'2002')*100,2)
-t1 <- round((kopalnica_sort$'2004' - kopalnica_sort$'2003')/(kopalnica_sort$'2003')*100,2)
-u1 <- round((kopalnica_sort$'2005' - kopalnica_sort$'2004')/(kopalnica_sort$'2004')*100,2)
-v1 <- round((kopalnica_sort$'2006' - kopalnica_sort$'2005')/(kopalnica_sort$'2005')*100,2)
-z1 <- round((kopalnica_sort$'2007' - kopalnica_sort$'2006')/(kopalnica_sort$'2006')*100,2)
-ž1 <- round((kopalnica_sort$'2008' - kopalnica_sort$'2007')/(kopalnica_sort$'2007')*100,2)
-koef_rast_kopalnica  <- data.table(Gostota,š1,t1,u1,v1,z1,ž1)
-names(koef_rast_kopalnica) <- c("Gostota","2003","2004","2005","2006","2007","2008")
-
-#koeficienti rasti po letih za stranišče
-m1 <- round((stranišče_sort$'2003' - stranišče_sort$'2002')/(stranišče_sort$'2002')*100,2)
-n1 <- round((stranišče_sort$'2004' - stranišče_sort$'2003')/(stranišče_sort$'2003')*100,2)
-o1 <- round((stranišče_sort$'2005' - stranišče_sort$'2004')/(stranišče_sort$'2004')*100,2)
-p1 <- round((stranišče_sort$'2006' - stranišče_sort$'2005')/(stranišče_sort$'2005')*100,2)
-r1 <- round((stranišče_sort$'2007' - stranišče_sort$'2006')/(stranišče_sort$'2006')*100,2)
-s1 <- round((stranišče_sort$'2008' - stranišče_sort$'2007')/(stranišče_sort$'2007')*100,2)
-koef_rast_stranišče  <- data.table(Gostota,m1,n1,o1,p1,r1,s1)
-names(koef_rast_stranišče) <- c("Gostota","2003","2004","2005","2006","2007","2008")
-
-
 #koeficienti rasti po letih za kuhinjo
 g1 <- round((kuhinja_sort$'2003' - kuhinja_sort$'2002')/(kuhinja_sort$'2002')*100,2)
 h1 <- round((kuhinja_sort$'2004' - kuhinja_sort$'2003')/(kuhinja_sort$'2003')*100,2)
