@@ -95,7 +95,7 @@ prikaz_pomankljivo_opremljenih_stanovanj <- ggplot(pomankljivi, aes(x="", y=Šte
 plot(prikaz_pomankljivo_opremljenih_stanovanj)
 
 #NAPELJAVE
-
+#vodovod
 
 
 
