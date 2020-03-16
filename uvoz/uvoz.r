@@ -1,31 +1,14 @@
 # 2. faza: Uvoz podatkov
 
 #paketi
-instaliraj.pakete <- function(){
-  install.packages("shiny")
-  install.packages("XML")
-  install.packages("rvest")
-  install.packages("xlsx")
-  install.packages("rJava")
-  install.packages("xlsxjars")
-  install.packages("dplyr")
-  install.packages("data.table")
-}
-
-#knjiznice
-nalozi.knjiznice <- function(){
-  library(knitr)
-  library(rvest)
-  library(gsubfn)
-  library(tidyr)
-  library(shiny)
-  library(readr)
-  library(xlsx)
-  library(methods)
-  library(dplyr)
-  library(ggplot2)
-  library(data.table)
-}
+install.packages("shiny")
+install.packages("XML")
+install.packages("rvest")
+install.packages("xlsx")
+install.packages("rJava")
+install.packages("xlsxjars")
+install.packages("dplyr")
+install.packages("data.table")
 
 #nastavitev , in .
 osnovne.nastavitve <- function(){
