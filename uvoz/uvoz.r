@@ -68,7 +68,7 @@ naredi.podtabelo.kanalizacije <- function(){
   return(kanalizacija)
 }
 
-#zapis podatkov v razpredelnico vodovod
+#zapis podatkov v razpredelnico kanalizacija
 kanalizacija <- naredi.podtabelo.kanalizacije()
 
 #funckija, ki izdela podtabelo osnovne tabele o napeljavah (posebej le električni tok) za lazje dostopanje do podatkov kasneje in popravi imena stolpcev, uvede spremembo: character->numeric
@@ -108,7 +108,7 @@ naredi.podtabelo.kopalnice <- function(){
 #zapis podatkov v razpredelnico kopalnica
 kopalnica <- naredi.podtabelo.kopalnice()
 
-o#funckija, ki izdela podtabelo osnovne tabele o napeljavah (posebej le stranišče) za lazje dostopanje do podatkov kasneje in popravi imena stolpcev, uvede spremembo: character->numeric
+#funckija, ki izdela podtabelo osnovne tabele o napeljavah (posebej le stranišče) za lazje dostopanje do podatkov kasneje in popravi imena stolpcev, uvede spremembo: character->numeric
 naredi.podtabelo.stranisca <- function(){
   stranišče <- napeljave[,c("Občina","2002 Stranišče","2003 Stranišče","2004 Stranišče","2005 Stranišče","2006 Stranišče","2007 Stranišče", "2008 Stranišče")]
   names(stranišče) <- c("Občina","2002","2003","2004","2005","2006","2007","2008")
@@ -144,18 +144,6 @@ uvozi.kazalnike <- function(){
 
 #zapis podatkov v razpredelnico kazalniki
 kazalniki <- uvozi.kazalnike()
-
-#ŠTEVILO OSEB IN SOB
-
-#funkcija, ki uvozi csv datoteko s številom oseb in sob in poimenuje stolpce
-uvozi.stosebsob <- function(){
-  st_oseb_sob <- read_csv2("podatki/st_oseb_in_sob.csv", skip =2, na="-", locale=locale(encoding="Windows-1250"))
-  names(st_oseb_sob) <- c("Občina", "Število sob", "Število oseb", "Število stanovanj") 
-  return(st_oseb_sob)
-}
-
-#zapis podatkov v razpredelnico st_oseb_sob
-st_oseb_sob <- uvozi.stosebsob()
 
 #POMANKLJIVOSTI
 
