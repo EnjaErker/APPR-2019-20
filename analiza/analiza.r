@@ -1,27 +1,94 @@
 # 4. faza: Analiza podatkov
 
-#KAZALNIKI:
+#NAPELJAVE
 
-#funkcija za sortiranje občin glede na gostoto
-fun1 <- function(x) if (x<261) {'zelo redka'} else if (x<521){'redka'} else if (x<780){'gosta'} else {'zelo gosta'}
+#pretvorba v obliko tidy data
+napeljave <- napeljave %>% 
+  gather(key="leto.tip", value="stevilo", -Obcina) %>%
+  separate(leto.tip, c("leto", "tip"), "(?<=[0-9]) ")
 
-#uporaba fun1 na podatkih za kazalnike,dodani stolpec za razdelitev občin v različne skupine glede na gostoto prebivalstva (zelo gosto(780-1045), gosto(521-780), redko(261-520), zelo redko(0-260))
-kazalniki$`Gostota prebivalstva` <- mapply(fun1, kazalniki$`Gostota prebivalstva (preb/km2)`)
+#konstrukcija podtabel vodovoda, kanalizacije, centralnega ogrevanja, električnega toka, kopalnice, stranišča,kuhinje
+vodovod <- napeljave %>% filter(tip == "Vodovod")
+centralno_ogrevanje <- napeljave %>% filter(tip == "Centralno ogrevanje")
+elektricni_tok <- napeljave %>% filter(tip == "Električni tok")
+kopalnica <- napeljave %>% filter(tip == "Kopalnica")
+stranisce <- napeljave %>% filter(tip == "Stranišče")
+kuhinja <- napeljave %>% filter(tip == "Kuhinja")
+kanalizacija <- napeljave %>% filter(tip == "Kanalizacija")
+vodovod <- vodovod[,-3]
+centralno_ogrevanje <- centralno_ogrevanje[,-3]
+elektricni_tok <- elektricni_tok[,-3]
+kopalnica <- kopalnica[,-3]
+stranisce <- stranisce[,-3]
+kuhinja <- kuhinja[,-3]
+kanalizacija <- kanalizacija[,-3]
 
-#funkcija za sortiranjem občin glede na stopnjo registrirane brezposelnosti
-fun2 <- function(x) if (x<12.3) {'ne kritična'} else {'kritična'}
+#KAZALNIKI
 
-#uporaba fun2 na podatkih za kazalnike, dodani stolpec za razdelitev občin v dva kategoriji (nekritična, kritična)
-kazalniki$`Kritičnost brezposelnosti` <- mapply(fun2, kazalniki$`Stopnja registrirane brezposelnosti (odstotek)`)
+#pretvorba v obliko tidy data
+kazalniki <- kazalniki %>% gather(key = "tip", value = "vrednost", -Obcina)
+kazalniki$Obcina <- gsub("Koper/Capodistria1)", "Koper/Capodistria", kazalniki$Obcina)
+kazalniki$Obcina <- gsub("Ankaran/Ancarano1)", "Ankaran/Ancarano", kazalniki$Obcina)
+kazalniki$Obcina <- gsub("Trebnje2)", "Trebnje", kazalniki$Obcina)
 
-#funkcija za sortiranje občin glede na višino povprečne mesečne neto plače oziroma indeksa (v tri skupine)
-fun3 <- function(x) if (x<80) {'1.'} else if (x<90) {'2.'} else {'3.'} 
+#konstrukcija podtabel gostota, placa_indeks, brezposelni,stanovanja 
+gostota <- kazalniki %>% filter(tip == "gostota_prebivalstva")
+gostota <- gostota[,-2]
+placa_indeks <- kazalniki %>% filter(tip == "pov_mes_neto_placa_indeks")
+placa_indeks <- placa_indeks[,-2]
+brezposelni <- kazalniki %>% filter(tip == "st_reg_brezposelnosti_ods")
+brezposelni <- brezposelni[,-2]
+stanovanja <- kazalniki %>% filter(tip == "st_stan_na_tisoc_preb")
+stanovanja <- stanovanja[,-2]
 
-#uporaba fun3 na podatkih za kazalnike, dodani stolpec za razdelitev občin v tri kategorije (1. nizka in 3. visoka)
-kazalniki$`Uvrstitev glede na povprečno mesečno neto plačo (indeks)(1. nizka, 3. visoka)` <- mapply(fun3, kazalniki$`Povprečna mesečna neto plača (indeks)`)
+#gostota_vodovod
+#združitev v novo tabelo gostota_vodovod
+gostota_vodovod <- left_join(vodovod,gostota,by="Obcina")
+colnames(gostota_vodovod) <- c("obcina", "leto", "stevilo", "gostota")
+#sortiranje obcin glede na gostoto
+levels <- c(0,261,521, 780, Inf)
+labels <- c("zelo_redka", "redka", "gosta", "zelo_gosta")
+gostota_vodovod <- gostota_vodovod %>% mutate(skupina = cut(gostota, levels, labels = labels))
+gostota_vodovod$stevilo <- parse_integer(gostota_vodovod$stevilo)
+#izracun povprecij
+leta.skupine.vod <- gostota_vodovod %>% group_by(leto, skupina) %>% summarise(povprecje = mean(stevilo))
+leta.skupine.vod$leto <- parse_integer(leta.skupine.vod$leto)
+
+#gostota_kanalizacija
+gostota_kanalizacija <- left_join(kanalizacija,gostota,by="Obcina")
+colnames(gostota_kanalizacija) <- c("obcina", "leto", "stevilo", "gostota")
+levels <- c(0,261,521, 780, Inf)
+labels <- c("zelo_redka", "redka", "gosta", "zelo_gosta")
+gostota_kanalizacija <- gostota_kanalizacija %>% mutate(skupina = cut(gostota, levels, labels = labels))
+gostota_kanalizacija$stevilo <- parse_integer(gostota_kanalizacija$stevilo)
+leta.skupine.kan <- gostota_kanalizacija %>% group_by(leto, skupina) %>% summarise(povprecje = mean(stevilo))
+leta.skupine.kan$leto <- parse_integer(leta.skupine.kan$leto)
+
+#placa_ogrevanje
+placa_ogrevanje <- left_join(centralno_ogrevanje,placa_indeks,by="Obcina")
+colnames(placa_ogrevanje) <- c("obcina", "leto", "stevilo", "placa_indeks")
+levels <- c(0, 80, 90, Inf)
+labels <- c("1.","2.","3.")
+placa_ogrevanje <- placa_ogrevanje %>% mutate(razred = cut(placa_indeks, levels, labels = labels))
+placa_ogrevanje$stevilo <- parse_integer(placa_ogrevanje$stevilo)
+leta.razredi <- placa_ogrevanje %>% group_by(leto, razred) %>% summarise(povprecje = mean(stevilo))
+leta.razredi$leto <- parse_integer(leta.razredi$leto)
+
+#stanovanja_kuhinja
+stanovanja_kuhinja <- left_join(kuhinja,stanovanja,by="Obcina")
+colnames(stanovanja_kuhinja) <- c("obcina", "leto", "stevilo", "stanovanja")
+levels <- c(0,350,450,Inf)
+labels <- c("malo","srednje","veliko")
+stanovanja_kuhinja <- stanovanja_kuhinja %>% mutate(st_stan = cut(stanovanja, levels, labels = labels))
+stanovanja_kuhinja$stevilo <- parse_integer(stanovanja_kuhinja$stevilo)
+leta.st_stan <- stanovanja_kuhinja %>% group_by(leto, st_stan) %>% summarise(povprecje = mean(stevilo))
+leta.st_stan$leto <- parse_integer(leta.st_stan$leto)
 
 #POMANKLJIVOSTI:
- 
+
+#pretvorba v obliko tidy data
+pomankljivosti <- pomankljivosti %>% gather(key = "tip", value = "vrednost", -Obcina)
+
 #izračun deležev stanovanj z vsaj eno pomankljivostjo (nov stolpec: Okviren delež stanovanj s pomankljivostmi)
 pomankljivosti[, "Okviren delež stanovanj s pomankljivostmi (v %)"] <- round((pomankljivosti$'Število vseh stanovanj' - (apply(pomankljivosti[, 3:6], 1, max)))/(pomankljivosti$`Število vseh stanovanj`)*100,0)
 
@@ -35,48 +102,3 @@ fun4 <- function(x) if (x<25) {'zelo nizka'} else if (x<50) {'nizka'} else if (x
 #uporaba fun4 na podatkih za pomankljivosti, dodani stolpec za razdelitev občin v štiri kategoriji (zelo nizka, nizka, visoka, zelo visoka)
 pomankljivosti$`Pomankljivost opremljenosti stanovanj` <- mapply(fun4, pomankljivosti$`Okviren delež stanovanj s pomankljivostmi (v %)`)
 
-#NAPELJAVE
-
-#dodatek novih stolpcev (Sprememba od 2002 do 2008,Najvišji skok (leti najvišjega skoka))
-vodovod$'Sprememba od 2002 do 2008' <- (vodovod$'2008' - vodovod$'2002')
-kanalizacija$'Sprememba od 2002 do 2008' <- (kanalizacija$'2008' - kanalizacija$'2002')
-električni_tok$'Sprememba od 2002 do 2008' <- (električni_tok$'2008' - električni_tok$'2002')
-centralno_ogrevanje$'Sprememba od 2002 do 2008' <- (centralno_ogrevanje$'2008' - centralno_ogrevanje$'2002')
-kopalnica$'Sprememba od 2002 do 2008' <- (kopalnica$'2008' - kopalnica$'2002')
-stranišče$'Sprememba od 2002 do 2008' <- (stranišče$'2008' - stranišče$'2002')
-kuhinja$'Sprememba od 2002 do 2008' <- (kuhinja$'2008' - kuhinja$'2002')
-                     
-#določanje gostote (dodatek stolpcev z gostoto, sortiranje občin glede na gostoto: uporaba fun1) 
-gostota_preb <- kazalniki[,2]
-nova_gostota <- gostota_preb[c(-1,-3,-4,-23,-42,-44,-50,-51,-60,-66,-69,-71,-87,-95,-97,-101,-102,-104,-107,-110,-117,-127,-141,-142,-143,-158,-159,-161,-163,-166,-167,-174,-179,-190,-194,-196,-204)]
-kanalizacija$'Gostota prebivalstva (preb/km)' <- nova_gostota
-vodovod$'Gostota prebivalstva (preb/km)' <- nova_gostota
-električni_tok$'Gostota prebivalstva (preb/km)' <- nova_gostota
-centralno_ogrevanje$'Gostota prebivalstva (preb/km)' <- nova_gostota
-kopalnica$'Gostota prebivalstva (preb/km)' <- nova_gostota
-stranišče$'Gostota prebivalstva (preb/km)' <- nova_gostota
-kuhinja$'Gostota prebivalstva (preb/km)' <- nova_gostota
-kanalizacija$`Gostota` <- mapply(fun1, kanalizacija$`Gostota prebivalstva (preb/km)`)
-vodovod$`Gostota` <- mapply(fun1, kanalizacija$`Gostota prebivalstva (preb/km)`)
-električni_tok$`Gostota` <- mapply(fun1, kanalizacija$`Gostota prebivalstva (preb/km)`)
-centralno_ogrevanje$`Gostota` <- mapply(fun1, kanalizacija$`Gostota prebivalstva (preb/km)`)
-kopalnica$`Gostota` <- mapply(fun1, kanalizacija$`Gostota prebivalstva (preb/km)`)
-stranišče$`Gostota` <- mapply(fun1, kanalizacija$`Gostota prebivalstva (preb/km)`)
-kuhinja$`Gostota` <- mapply(fun1, kanalizacija$`Gostota prebivalstva (preb/km)`)
-
-
-
-
-
-
-
-
-podatki <- obcine %>% transmute(obcina, povrsina, gostota,
-                                gostota.naselij=naselja/povrsina) %>%
-  left_join(povprecja, by="obcina")
-row.names(podatki) <- podatki$obcina
-podatki$obcina <- NULL
-
-# Število skupin
-n <- 5
-skupine <- hclust(dist(scale(podatki))) %>% cutree(n)

@@ -3,19 +3,8 @@
 
 #KAZALNIKI
 
-#graficni prikaz gostote prebivalstva v Sloveniji (seštevek posameznih občin glede na lastnost gostote, izdelava novega data tabla gostote, izris tortnega diagrama)
-st_zelo_redkih <- sum(kazalniki$'Gostota prebivalstva' == 'zelo redka')
-st_redkih <- sum(kazalniki$'Gostota prebivalstva' == 'redka')
-st_gostih <- sum(kazalniki$'Gostota prebivalstva' == 'gosta')
-st_zelo_gostih <- sum(kazalniki$'Gostota prebivalstva' == 'zelo gosta')
-
-Gostota <- c("Zelo redka", "Redka","Gosta","Zelo gosta")
-Število <- c(st_zelo_redkih, st_redkih, st_gostih, st_zelo_gostih)
-pct <- round((Število/sum(Število)*100),2)
-  
-gostota <- data.table(Gostota, Število)
-
-prikaz_gostote_preb <- ggplot(gostota, aes(x="", y=Število, fill=Gostota)) + geom_bar(stat="identity", width=1) +
+#graficni prikaz gostote prebivalstva v Sloveniji 
+prikaz_gostote_preb <- ggplot(gostota, aes(x="", y=vrednost, fill=gostota)) + geom_bar(stat="identity", width=1) +
   coord_polar("y", start=0) + 
   scale_fill_manual(values=c("#55DDE0", "#33658A", "#2F4858", "#F6AE2D")) +
   labs(x = NULL, y = NULL, fill = NULL, title = "Gostota prebivalstva v Sloveniji") +
@@ -95,7 +84,26 @@ prikaz_pomankljivo_opremljenih_stanovanj <- ggplot(pomankljivi, aes(x="", y=Šte
 plot(prikaz_pomankljivo_opremljenih_stanovanj)
 
 #NAPELJAVE
-#vodovod
+
+#graficni prikaz vodovoda in gostote
+graf1 <- ggplot(leta.skupine.vod) + aes(x=leto, y=povprecje, color=skupina) + geom_line() + geom_point() +
+  labs(x="Leto",y="Povprečno število stanovanj z vodovodom",title="Spremembe v številu vodovodnih napeljav glede na gostoto poselitve", color = "Gostota poselitve") +
+  theme(legend.position = "bottom") 
+
+#graficni prikaz kanalizacije in gostote
+graf2 <- ggplot(leta.skupine.kan) + aes(x=leto, y=povprecje, color=skupina) + geom_line() + geom_point() +
+  labs(x="Leto",y="Povprečno število stanovanj s kanalizacijo",title="Spremembe v številu napeljav kanalizacije glede na gostoto poselitve", color = "Gostota poselitve") +
+  theme(legend.position = "bottom") 
+
+#graficni prikaz plac in ogrevanja
+graf3 <- ggplot(leta.razredi) + aes(x=leto, y=povprecje, color=razred) + geom_line() + geom_point() +
+  labs(x="Leto",y="Povprečno število stanovanj z ogrevanjem",title="Spremembe v številu ogrevalnih napeljav glede na plačni razred prebivalstva", color = "Plačni razred") +
+  theme(legend.position = "bottom") 
+
+#graficni prikaz stanovanj in kuhinj
+graf4 <- ggplot(leta.st_stan) + aes(x=leto, y=povprecje, color=st_stan) + geom_line() + geom_point() +
+  labs(x="Leto",y="Povprečno število stanovanj s kuhinjo",title="Spremembe v številu kuhinj glede na število stanovanj", color = "Število stanovanj") +
+  theme(legend.position = "bottom") 
 
 
 
