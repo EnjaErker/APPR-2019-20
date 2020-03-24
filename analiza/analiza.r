@@ -1,4 +1,4 @@
-# 4. faza: Analiza podatkov
+# ANALIZA
 
 #NAPELJAVE
 
@@ -27,9 +27,6 @@ kanalizacija <- kanalizacija[,-3]
 
 #pretvorba v obliko tidy data
 kazalniki <- kazalniki %>% gather(key = "tip", value = "vrednost", -Obcina)
-kazalniki$Obcina <- gsub("Koper/Capodistria1)", "Koper/Capodistria", kazalniki$Obcina)
-kazalniki$Obcina <- gsub("Ankaran/Ancarano1)", "Ankaran/Ancarano", kazalniki$Obcina)
-kazalniki$Obcina <- gsub("Trebnje2)", "Trebnje", kazalniki$Obcina)
 
 #konstrukcija podtabel gostota, placa_indeks, brezposelni,stanovanja 
 gostota <- kazalniki %>% filter(tip == "gostota_prebivalstva")
@@ -41,14 +38,19 @@ brezposelni <- brezposelni[,-2]
 stanovanja <- kazalniki %>% filter(tip == "st_stan_na_tisoc_preb")
 stanovanja <- stanovanja[,-2]
 
+#sprememba nekaterih imen
+gostota$Obcina <- gsub("Koper/Capodistria1)", "Koper/Capodistria", gostota$Obcina)
+gostota$Obcina <- gsub("Ankaran/Ancarano1)", "Ankaran/Ancarano", gostota$Obcina)
+gostota$Obcina <- gsub("Trebnje2)", "Trebnje", gostota$Obcina)
+
 #gostota_vodovod
-#združitev v novo tabelo gostota_vodovod
 gostota_vodovod <- left_join(vodovod,gostota,by="Obcina")
 colnames(gostota_vodovod) <- c("obcina", "leto", "stevilo", "gostota")
 #sortiranje obcin glede na gostoto
 levels <- c(0,261,521, 780, Inf)
 labels <- c("zelo_redka", "redka", "gosta", "zelo_gosta")
 gostota_vodovod <- gostota_vodovod %>% mutate(skupina = cut(gostota, levels, labels = labels))
+skupina <- gostota_vodovod
 gostota_vodovod$stevilo <- parse_integer(gostota_vodovod$stevilo)
 #izracun povprecij
 leta.skupine.vod <- gostota_vodovod %>% group_by(leto, skupina) %>% summarise(povprecje = mean(stevilo))
@@ -89,16 +91,81 @@ leta.st_stan$leto <- parse_integer(leta.st_stan$leto)
 #pretvorba v obliko tidy data
 pomankljivosti <- pomankljivosti %>% gather(key = "tip", value = "vrednost", -Obcina)
 
-#izračun deležev stanovanj z vsaj eno pomankljivostjo (nov stolpec: Okviren delež stanovanj s pomankljivostmi)
-pomankljivosti[, "Okviren delež stanovanj s pomankljivostmi (v %)"] <- round((pomankljivosti$'Število vseh stanovanj' - (apply(pomankljivosti[, 3:6], 1, max)))/(pomankljivosti$`Število vseh stanovanj`)*100,0)
+#delezi stanovanj s pomakljivostmi v posamezni obcini v odstotkih
+delezi <- pomankljivosti %>% group_by(Obcina) %>% top_n(2) %>% summarise(delez = min(vrednost)/max(vrednost)*100)
+levels <- c(0,25,50,75,Inf)
+labels <- c("zelo nizka","nizka","visoka","zelo visoka")
+delezi <- delezi %>% mutate(pomankljivost = cut(delez, levels, labels=labels))
 
-#ocenitev kritičnosti situacije glede na slovensko povprečje
-povprečje <- mean(pomankljivosti$'Okviren delež stanovanj s pomankljivostmi (v %)')
-pomankljivosti$`Kritičnost situacije (glede na slovensko povprečje)` <- ifelse(pomankljivosti$'Okviren delež stanovanj s pomankljivostmi (v %)'<povprečje,"Ne kritična","Kritična")
+#PREOSTALO ZA VIZUALIZACIJE
 
-#funkcija za sortiranjem občin glede na pomankljivosti v opremljenosti stanovanj
-fun4 <- function(x) if (x<25) {'zelo nizka'} else if (x<50) {'nizka'} else if (x<75) {'visoka'} else {'zelo visoka'}
+#brezposelni
+levels <- c(0,12,Inf)
+labels <- c("ne kritična","kritična")
+brezposelni <- brezposelni %>% mutate(kriticnost = cut(vrednost, levels, labels = labels))
+#obcini z najmanj in najbolj kriticno brezposelnostjo
+y_max <- max(brezposelni[,"vrednost"])
+najbolj_kriticna <- brezposelni[brezposelni$'vrednost' == y_max, "Obcina"]
+y_min <- min(brezposelni[,"vrednost"])
+najmanj_kriticna <- brezposelni[brezposelni$'vrednost' == y_min, "Obcina"]
 
-#uporaba fun4 na podatkih za pomankljivosti, dodani stolpec za razdelitev občin v štiri kategoriji (zelo nizka, nizka, visoka, zelo visoka)
-pomankljivosti$`Pomankljivost opremljenosti stanovanj` <- mapply(fun4, pomankljivosti$`Okviren delež stanovanj s pomankljivostmi (v %)`)
+#place
+levels <- c(0, 80, 90, Inf)
+labels <- c("1.","2.","3.")
+placa_indeks <- placa_indeks %>% mutate(razred = cut(vrednost, levels, labels = labels))
+#place, obcini z najvisjim in najnizjim indeksom
+y_max <- max(placa_indeks[,"vrednost"])
+najvisji_indeks <- placa_indeks[placa_indeks$'vrednost' == y_max, "Obcina"]
+y_min <- min(placa_indeks[,"vrednost"])
+najnizji_indeks <- placa_indeks[placa_indeks$'vrednost' == y_min, "Obcina"]
 
+#gostota
+levels <- c(0,261,521, 780, Inf)
+labels <- c("zelo_redka", "redka", "gosta", "zelo_gosta")
+gostota <- gostota %>% mutate(skupina = cut(vrednost, levels, labels = labels))
+#obcini z najvecjo in najmanjso gostoto
+y_max <- max(gostota[,"vrednost"])
+najbolj_gosta <- gostota[gostota$'vrednost' == y_max, "Obcina"]
+y_min <- min(gostota[,"vrednost"])
+najmanj_gosta <- gostota[gostota$'vrednost' == y_min, "Obcina"]
+
+#KAZALNIKI ZA ZEMLJEVIDE
+
+#pretvorba v obliko tidy data
+kazalniki_za_zemljevide <- kazalniki_za_zemljevide %>% gather(key = "tip", value = "vrednost", -Obcina)
+#preimenovanje nekaterih imen za risanje zemljevida
+kazalniki_za_zemljevide$Obcina = gsub("Ankaran/Ancarano1)", "Ankaran", kazalniki_za_zemljevide$Obcina)
+kazalniki_za_zemljevide$Obcina <- gsub("Koper/Capodistria1)", "Koper", kazalniki_za_zemljevide$Obcina)
+kazalniki_za_zemljevide$Obcina <- gsub("Trebnje2)", "Trebnje", kazalniki_za_zemljevide$Obcina)
+kazalniki_za_zemljevide$Obcina <- gsub("Miren - Kostanjevica", "Miren-Kostanjevica", kazalniki_za_zemljevide$Obcina)
+kazalniki_za_zemljevide$Obcina <- gsub("Mirna2)", "Mirna", kazalniki_za_zemljevide$Obcina)
+kazalniki_za_zemljevide$Obcina <- gsub("Rače - Fram", "Rače-Fram", kazalniki_za_zemljevide$Obcina)
+kazalniki_za_zemljevide$Obcina <- gsub("Šempeter - Vrtojba", "Šempeter-Vrtojba", kazalniki_za_zemljevide$Obcina)
+kazalniki_za_zemljevide$Obcina <- gsub("Piran/Pirano", "Piran", kazalniki_za_zemljevide$Obcina)
+kazalniki_za_zemljevide$Obcina <- gsub("Mokronog - Trebelno", "Mokronog-Trebelno", kazalniki_za_zemljevide$Obcina)
+kazalniki_za_zemljevide$Obcina <- gsub("Renče - Vogrsko", "Renče-Vogrsko", kazalniki_za_zemljevide$Obcina)
+kazalniki_za_zemljevide$Obcina <- gsub("Dobrova - Polhov Gradec", "Dobrova-Polhov Gradec", kazalniki_za_zemljevide$Obcina)
+kazalniki_za_zemljevide$Obcina <- gsub("Hrpelje - Kozina", "Hrpelje-Kozina", kazalniki_za_zemljevide$Obcina)
+kazalniki_za_zemljevide$Obcina <- gsub("Sveta Trojica v Slov. goricah", "Sveta Trojica v Slovenskih goricah", kazalniki_za_zemljevide$Obcina)
+kazalniki_za_zemljevide$Obcina <- gsub("Sveti Jurij v Slov. goricah", "Sveti Jurij v Slovenskih goricah", kazalniki_za_zemljevide$Obcina)
+kazalniki_za_zemljevide$Obcina <- gsub("Gorenja vas - Poljane", "Gorenja vas-Poljane", kazalniki_za_zemljevide$Obcina)
+kazalniki_za_zemljevide$Obcina <- gsub("Hoče - Slivnica", "Hoče-Slivnica", kazalniki_za_zemljevide$Obcina)
+kazalniki_za_zemljevide$Obcina <- gsub("Izola/Isola", "Izola", kazalniki_za_zemljevide$Obcina)
+kazalniki_za_zemljevide$Obcina <- gsub("Log - Dragomer", "Log-Dragomer", kazalniki_za_zemljevide$Obcina)
+kazalniki_za_zemljevide$Obcina <- gsub("Lendava/Lendva", "Lendava", kazalniki_za_zemljevide$Obcina)
+kazalniki_za_zemljevide$Obcina <- gsub("Dobrovnik/Dobronak", "Dobrovnik", kazalniki_za_zemljevide$Obcina)
+kazalniki_za_zemljevide$Obcina <- gsub("Hodoš/Hodos", "Hodoš", kazalniki_za_zemljevide$Obcina)
+#urejanje
+#konstrukcija podtabel gostota, placa_indeks, brezposelni,stanovanja 
+gostota_z <- kazalniki_za_zemljevide %>% filter(tip == "gostota_prebivalstva")
+gostota_z <- gostota_z[,-2]
+gostota_z <- gostota_z[-1,]
+placa_indeks_z <- kazalniki_za_zemljevide %>% filter(tip == "pov_mes_neto_placa_indeks")
+placa_indeks_z <- placa_indeks_z[,-2]
+placa_indeks_z <- placa_indeks_z[-1,]
+brezposelni_z <- kazalniki_za_zemljevide %>% filter(tip == "st_reg_brezposelnosti_ods")
+brezposelni_z <- brezposelni_z[,-2]
+brezposelni_z <- brezposelni_z[-1,]
+stanovanja_z <- kazalniki_za_zemljevide %>% filter(tip == "st_stan_na_tisoc_preb")
+stanovanja_z <- stanovanja_z[,-2]
+stanovanja_z <- stanovanja_z[-1,]

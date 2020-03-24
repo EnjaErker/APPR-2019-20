@@ -59,7 +59,7 @@ Spletne strani oziroma viri podatkov:
 
 Podatki so v treh razpredelnicah, sprva še niso v obliki *tidy data*.
 
-1. `napeljave` - podatki o napeljavah za vsako občino
+1. `napeljave` - podatki o napeljavah za vsako občino:
   - `občina` - imenska spremenljivka: ime občine (neurejen faktor, character)
   - `vodovod` - meritev: število stanovanj z vodovodom (število, integer)
   - `kanalizacija` - meritev: število stanovanj s kanalizacijo (število, integer) 
@@ -69,14 +69,14 @@ Podatki so v treh razpredelnicah, sprva še niso v obliki *tidy data*.
   - `stranišče` - meritev: število stanovanj s straniščem (število, integer)
   - `kuhinja` - meritev: število stanovanj z kuhinjo (število, integer)
 
-2. `kazalniki` - podatki o statističnih kazalniki za vsako občino
+2. `kazalniki` - podatki o statističnih kazalniki za vsako občino:
   - `občina` - imenska spremenljivka: ime občine (neurejen faktor, character)
   - `gostota prebivalstva (preb/km2)` - meritev: gostota prebivalstva v enotah prebivalcev na kvadratni kilometer (število, numeric)
   - `povprečna mesečna neto plača (indeks)` - meritev: povprečna mesečna neto plača podana v indeksu (število, integer) 
   - `stopnja registrirane brezposelnosti (odstotek)` - meritev: stopnja registrirane brezposelnosti podana v odstotkih (število, numeric)
   - `število stanovanj (na 1000 prebivalcev)` - meritev: število stanovanj v posamezni občini, podano na 1000 prebivalcev (število, integer)
 
-3. `pomankljivosti` - podatki o pomankljivostih stanovanj za vsako občino
+3. `pomankljivosti` - podatki o pomankljivostih stanovanj za vsako občino:
   - `občina` - imenska spremenljivka: ime občine (neurejen faktor, character)
   - `število vseh stanovanj` - meritev: število vseh stanovanj (število, integer)
   - `število stanovanj brez centralnega ogrevanja` - meritev: število stanovanj brez centralnega ogrevanja (število, integer) 
@@ -90,14 +90,19 @@ Pretvorba razpredelnic v *tidy data*
   - poimenovanje prvega stolpca
   - izbris vrstic (občin) s pomankljivimi podatki (v konkretnem primeru NA ali z)
   - konstrukcija 'podtabel' za lažjo kasnejšo analizo (izbira le nekaterih stolpcev, sprememba character -> numeric)
+  - zružitev podatkov glede na leto, število in tip podatka
+  - filtriranje v posamezne podtabele (vodovod, kanalizacija, centralno ogrevanje, električni tok, stranišče, kuhinja, kopalnica)
 
 2.`kazalniki`
   - poimenovanje stolpcev
   - izbris zadnjih dveh stolpcev, ki jih ne potrebujem
+  - izbris podvojenih občin
+  - združitev glede na tip podatka in število
 
 4.`pomankljivosti`
   - poimenovanje stolpcev
   - izbris zadnjih 20 vrstic z nepomembnimi podatki
+  - združitev podatkov glede na tip in vrednost
 
 
 Spodnji graf prikazuje porazdelitev števila naselij v občinah.
@@ -113,20 +118,41 @@ ggplot(obcine, aes(x=naselja)) + geom_histogram() +
 
 # Analiza in vizualizacija podatkov
 
-Prvi korak v analizi je bila analiza kazalnikov. Občine sem sortirala glede na gostoto, registrirano stopnjo brezposelnosti in povprečno mesečno neto plačo. Za vsako lastnost sem občine razdelila v nekaj skupin s podobnimi lastnostmi. Na primer občine, ki so zelo gosto poseljene so sedaj označene in združene v eno skupino. Podobno velja tudi za občine s kritično brezposelnostjo in pa z nizkim indeksom povprečne mesečne neto plače. Nadaljna analiza bo na ta način lažja, saj so občine s podobnimi lastnostmi že pogrupirane. 
+Prvi korak v analizi je bila analiza napeljav od leta 2002 do leta 2010. Naredila sem podtabele z uporabo ukaza filter za vodovod, centralno ogrevanje, električni tok, kopalnico, stranišče, kuhinjo in kanalizacijo. Tako sem dobila podtabele z vrednostmi, ki predstavljajo število stanovanj z določeno napeljave, npr. vodovodom. Z istim ukazom sem občine sortirala  glede na gostoto poselitve, registrirano stopnjo brezposelnosti, povprečno mesečno neto plačo in število stanovanj. Tu sem vzela podatke zadnjega razpoložljivega leta - 2015.
 
-Nato sem iz podatkov o pomankljivostih izračunala okviren delež stanovanj s pomankljivostmi v posamezni občini. Na osnovi dobljenih rezultatov sem ocenila kritičnost situacije občine glede na slovensko povprečje. Občine sem nato tudi sortirala v štiri skupine glede na omenjeno lastnost. 
+Za vsako od omenjenih lastnosti sem nato občine razdelila v nekaj skupin s podobnostmi. Uporabila sem ukaz mutate. Na primer občine, ki so zelo gosto poseljene so sedaj označene in združene v eno skupino. Podobno velja tudi za občine s kritično brezposelnostjo in za tiste z nizkim indeksom povprečne mesečne neto plače. Nadaljna analiza bo na ta način lažja, saj so občine s podobnimi lastnostmi že grupirane. 
 
-Posameznim podtabelam napeljav sem tudi dodala stolpce gostote prebivalstva, združila sem podatke iz različnih tabel in odstranila občine s pomanjkljivostmi. Uporabila sem funckijo, ki sem jo že v prvem koraku analize definirala za sortiranje občin glede na gostoto.
+Glede na vsebino obdelanih podatkov sem naredila tabele s tistimi spremenljivkami, za katere sem sumila, da bi med njimi morda lahko obstajala povezava. Združila sem gostoto prebivalstva in kanalizacijo, povprečne plače in ogrevanje, število stanovanj in kuhinj v občini, gostoto prebivalstva ter vodovod. To sem naredila z ukazoma group_by ter summarise.
 
-library(ggplot2)
-library(dplyr)
+Iz podatkov o pomankljivostih leta 2015 sem izračunala okviren delež stanovanj s pomankljivostmi v posamezni občini. Na osnovi dobljenih rezultatov sem ocenila kritičnost situacije občine glede na slovensko povprečje. Občine sem nato tudi sortirala v štiri skupine glede na omenjeno lastnost. 
 
+Na osnovi predstavljene preliminarne analize sem se lotila vizualizacij. Za predstavitev občin, grupiranih po skupinah glede na neko skupno lastnost, sem izbrala tortni diagram. Naredila sem grafični prikaz gostote prebivalstva, kritičnosti brezposelnosti ter povprečne mesečne neto plače  v Sloveniji, vse za leto 2015. Dodala sem jim naslove, tabele in oznake deležev.
 
-g_range <- range(0,vodovod)
-plot(vodovod, type="o", col="blue",ylim=g_range,axes=FALSE, ann=FALSE)
-axis(1, at=1:7, lab=c("2002","2003","2004","2005","2006","2007","2008"))
+Preko vizualizacije gostote prebivalstva v Sloveniji leta 2015 sem ugotovila, da je več kot 90% slovenskih občin zelo redko poseljenih, kar ni presenetljivo glede na majhnost države in delež ruralnosti le-te. Izjemno majhen delež predstavljajo občine z zelo gosto ali gosto poselitvijo, sem spada Ljubljana in še nekaj drugih večjih občin. Preostali del pa je redko poseljen, najredkeje občina Solčava.
 
+Tortni diagram kritičnosti brezposelnosti v Sloveniji leta 2015 prikazuje, kako kritična je situacija. Kritičnost sem določila glede na slovensko povprečje, ki v indeksu znaša 12,3. Slabih 60% občin ne trpi zaradi previsoke brezposelnosti. Vendar pa je podatek o preostanku, kjer je brezposelnost glede na slovensko povprečje kritična vseeno nekoliko zaskrbljujoč. Najmanj brezposelnih ima občina Žiri, najbolj kritično pa je v Rogašovcih. 
+
+Diagram povprečne mesečne neto plače v Sloveniji glede na indeks istega leta pa kaže, da so plače relativno visoke. Delež nizkih plač, tistih v najnižjem plačnem razredu, je le dobrih 9%. Preostali del pa je približno enakomerno razdeljen na visoke in srednje plače. Najvišji indeks je bil izmerjen v Cerkljah na Gorenjskem, najnižji pa v Kostanjevici na Krki.
+
+Na osnovi združitve podatkov iz napeljav in kazalnikov (predstavljene zgoraj), sem narisala nekaj črtnih diagramov in na ta način analizirala odvisnosti posameznih spremenljivk: vodovodne napeljave glede na gostoto poselitve, napeljave kanalizacije glede na gostoto poselitve, ogrevalne napeljave glede na plačni razred prebivalstva in število kuhinj glede na število stanovanj. Grafom sem dodala naslove in tabele.
+
+V prvem grafu je prikazano število vodovodnih napeljav glede na gostoto poselitve med 2002 in 2010. Opazila sem, da redkejša kot je gostota poselitve počasneje narašča število vodovodnih napeljav, kar je logično. Zanemarljivo majhne so spremembe v občinah z zelo redko ter redko gostoto, situacija tam je stabilna. Naraščajoč trend pa je opazen pri občinah z gosto in zelo gosto poselitvijo. Bolj strmo je naraščanje v občinah z zelo gosto poselitvijo.
+
+Graf, ki prikazuje število napeljav kanalizacije glede na gostoto poselitve med 2002 in 2010 je vizualno zelo podoben prejšnjemu. Očitno enake zakonitosti kot za vodovod veljajo tudi za kanalizacijo in druge podobne napeljave. Redkejša kot je poseljenost, počasneje narašča število napeljav kanalizacije. V zelo redkih in redko poseljenih občinah teh sprememb skoraj ni opaziti.
+
+Tretji graf prikazuje število ogrevalnih napeljav glede na plačni razred prebivalstva med 2002 in 2010. Najmanj strma je krivulja najnižjega plačnega razreda, ljudje z nizkimi plačami se torej redkeje odločajo za ogrevalne napeljave, saj si to težje privoščijo. Zelo podobno velja tudi za srednji razred, le da so številke nekoliko večje. Vendar pa število ogrevalnih napeljav vseeno raste počasi. Drugače je v najvišjem plačnem razredu, kjer število strmo narašča. Manjši padec je opaziti le v letu 2007 pred recesijo. 
+
+Zadnji graf prikazuje število kuhinj glede na število stanovanj med 2002 in 2010. Zanimivo je, da sta krivulji za občine z majhnim in srednjim številom stanovanj skoraj identični, edina razlika je ta, da se nahajata na različnih višinah. Opazno je konstantno naraščanje z izjemo leta 2007 pred krizo. Tega momenta v krivulji za veliko število stanovanj ni moč opaziti. Pomembna je tudi ugotovitev, da je kuhinj več v občinah z srednjim številom stanovanj in manj v tistih z velikim številom. V večjih mestih namreč več ljudi živi v stanovanju brez kuhinje oziroma si jo pogosto deli s sostanovalci.
+
+Grafično sem prikazala tudi pomanjkljivosti opremljenosti stanovanj v Sloveniji, uporabila sem tortni diagram, ki sem mu dodala še naslov, legendo in oznake za posamezne deleže. Opazila sem, da ima skoraj 40% občin zelo visoko pomanjkljivo opremljena stanovanja, pod pomanjkljiva sem obravnavala stanovanja brez vode, centralnega ogrevanja, elektrike ali javne kanalizacije. Razlog za tako visoke deleže je večinska ruralnost slovenskega območja.
+
+Kazalnike sem grafično prikazala tudi v obliki zemljevidov, predstavljeni podatki so iz leta 2015. Narisala sem zemljevid gostote poseljenosti, iz česar se jasno vidi kontrast med Ljubljano in ostalimi občinami. Ljubljana ima namreč poselitev od 1000 do 1200 prebivalcev na kvadratni kilometer. Nekoliko nižje, vendar glede na slovensko povprečje relativno visoke, gostote imajo tudi njene sosednje občine in večja mesta na obali ter na Štajerskem.
+
+Drugi zemljevid prikazuje povprečne mesečne neto plače glede na indeks. Ker je Slovenija v splošnem obarvana dokaj temno, so plače relativno visoke. Izstopajo le nekatere občine z indeksom pod 80 in sicer Bohinj, Bloke, Osilnica, Kostanjevica na Krki, Rečica ob Savinji, Tabor, Oplotnica, Makole, Hajdina, Moravske toplice in Gornji Petrovci. Najvišji indeks pa je v Cerkljah na Gorenjskem. 
+
+Z zemljevidom sem prikazala tudi brezposelnost glede na indeks. Najvišja stopnja brezposelnosti je na severovzhodnem in jugovzhodnem delu države, v pretežno ruralnih občinah. Izstopajo Kočevje, Črnomelj, Trbovlje in manjše občine v Prekmurju. Najmanj brezposelnih pa je v diagonalnem pasu od severozahoda proti jugovzhodu, z izjemo občine Ljubljana. 
+
+Zadnji zemljevid prikazuje število stanovanj na 1000 prebivalcev. Za večino občin se ta številka giblje med 300 in 400 stanovanji. Izstopa pa rob države na severni meji z Italijo. Razlog za to je najverjetneje dejstvo, da je na tem območju zelo razvit turizem. Veliko je hotelov, apartmajev in pohodniških koč. Poleg tega pa ima veliko ljudi, ki živijo v prestolnici tam vikende. 
 
 #vzorčni primer
 ```{r vizualizacija, echo=FALSE, message=FALSE, warning=FALSE, results='hide'}
