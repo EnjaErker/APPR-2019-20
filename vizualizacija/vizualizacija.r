@@ -11,12 +11,12 @@ st_zelo_gostih <- sum(gostota$'skupina' == 'zelo_gosta')
 Skupina <- c("zelo redka","redka","gosta","zelo gosta")
 gostota_zag <- data.table(Skupina, Število)
 
-prikaz_gostote_preb <- ggplot(gostota_zag, aes(x="", y=Število, fill=Skupina)) + geom_bar(stat="identity", width=1) +
+t1 <- ggplot(gostota_zag, aes(x="", y=Število, fill=Skupina)) + geom_bar(stat="identity", width=1) +
   coord_polar("y", start=0) + scale_fill_manual(values=c("#55DDE0", "#33658A", "#2F4858", "#F6AE2D")) +
   labs(x = NULL, y = NULL, fill = NULL, title = "Gostota prebivalstva v Sloveniji leta 2015") +
   theme_classic() + theme(axis.line = element_blank(),axis.text = element_blank(),axis.ticks = element_blank(),plot.title = element_text(hjust = 0.5, color = "#666666")) +
   geom_text(aes(label = paste(round(Število / sum(Število) * 100, 1), "%"), x = 1.3),position = position_stack(vjust = 0.5))
-plot(prikaz_gostote_preb)
+plot(t1)
 
 #graficni prikaz kriticnosti brezposelnosti v Sloveniji (izračun kritičnih in nekritičnih, nov data table s podatki, izris tortnega diagrama)
 st_kriticnih <- sum(brezposelni$'kriticnost' == 'kritična')
@@ -25,12 +25,12 @@ Kritičnost <- c("kritična","nekritična")
 Število <- c(st_kriticnih, st_nekriticnih)
 kriticnost <- data.table(Kritičnost, Število)
 
-prikaz_kriticnosti_brezposelnosti <- ggplot(kriticnost, aes(x="", y=Število, fill=Kritičnost)) + geom_bar(stat="identity", width=1) +
+t2 <- ggplot(kriticnost, aes(x="", y=Število, fill=Kritičnost)) + geom_bar(stat="identity", width=1) +
   coord_polar("y", start=0) + scale_fill_manual(values=c("#F26419", "#999999")) +
   labs(x = NULL, y = NULL, fill = NULL, title = "Kritičnost brezposelnosti v Sloveniji leta 2015") +
   theme_classic() + theme(axis.line = element_blank(),axis.text = element_blank(),axis.ticks = element_blank(),plot.title = element_text(hjust = 0.5, color = "#666666")) +
   geom_text(aes(label = paste(round(Število / sum(Število) * 100, 1), "%"), x = 1.3),position = position_stack(vjust = 0.5))
-plot(prikaz_kriticnosti_brezposelnosti)
+plot(t2)
 
 #graficni prikaz povprečne mesečne neto plače (indeks) v Sloveniji (glede na delitev na tri skupine) ((izračun 'razredov', nov data table s podatki, izris tortnega diagrama))
 prva <- sum(placa_indeks$'razred' == 'nizka')
@@ -40,32 +40,32 @@ Višina <- c("nizka", "srednja", "visoka")
 Število <- c(prva, druga, tretja)
 place <- data.table(Višina, Število)
 
-prikaz_povprecne_mesecne_neto_place <- ggplot(place, aes(x="", y=Število, fill=Višina)) + geom_bar(stat="identity", width=1) +
+t3 <- ggplot(place, aes(x="", y=Število, fill=Višina)) + geom_bar(stat="identity", width=1) +
   coord_polar("y", start=0) + scale_fill_manual(values=c("#2F4858", "#F6AE2D", "#999999")) +
   labs(x = NULL, y = NULL, fill = NULL, title = "Povprečne mesečne neto plače na ravni občin glede na slovensko povprečje leta 2015 po skupinah") +
   theme_classic() + theme(axis.line = element_blank(),axis.text = element_blank(),axis.ticks = element_blank(),plot.title = element_text(hjust = 0.5, color = "#666666"))+
   geom_text(aes(label = paste(round(Število / sum(Število) * 100, 1), "%"), x = 1.3),position = position_stack(vjust = 0.5))
-plot(prikaz_povprecne_mesecne_neto_place)
+plot(t3)
 
 #NAPELJAVE, GRAFI
 
 #graficni prikaz vodovoda in gostote
-graf1 <- ggplot(leta.skupine.vod) + aes(x=leto, y=povprecje, color=skupina) + geom_line() + geom_point() +
+g1 <- ggplot(leta.skupine.vod) + aes(x=leto, y=povprecje, color=skupina) + geom_line() + geom_point() +
   labs(x="Leto",y="Povprečno število stanovanj z vodovodom",title="Število vodovodnih napeljav glede na gostoto poselitve, 2002 - 2010", color = "Gostota poselitve") +
   theme(legend.position = "bottom") 
-plot(graf1)
+plot(g1)
 
 #graficni prikaz kanalizacije in gostote
-graf2 <- ggplot(leta.skupine.kan) + aes(x=leto, y=povprecje, color=skupina) + geom_line() + geom_point() +
+g2 <- ggplot(leta.skupine.kan) + aes(x=leto, y=povprecje, color=skupina) + geom_line() + geom_point() +
   labs(x="Leto",y="Povprečno število stanovanj s kanalizacijo",title="Število napeljav kanalizacije glede na gostoto poselitve, 2002 - 2010", color = "Gostota poselitve") +
   theme(legend.position = "bottom") 
-plot(graf2)
+plot(g2)
 
 #graficni prikaz plac in ogrevanja
-graf3 <- ggplot(leta.razredi) + aes(x=leto, y=povprecje, color=razred) + geom_line() + geom_point() +
+g3 <- ggplot(leta.razredi) + aes(x=leto, y=povprecje, color=razred) + geom_line() + geom_point() +
   labs(x="Leto",y="Povprečno število stanovanj z ogrevanjem",title="Število ogrevalnih napeljav in plače prebivalstva, 2002 - 2010", color = "Povprečna višina plač") +
   theme(legend.position = "bottom") 
-plot(graf3)
+plot(g3)
 
 #POMANKLJIVOSTI, TORTNI PRIKAZ
 
@@ -78,27 +78,27 @@ Stopnja <- c("zelo nizka", "nizka", "visoka", "zelo visoka")
 Število <- c(st_zelo_nizkih, st_nizkih, st_visokih, st_zelo_visokih)
 pomankljivi <- data.table(Stopnja, Število) 
 
-prikaz_pomankljivo_opremljenih_stanovanj <- ggplot(pomankljivi, aes(x="", y=Število, fill=Stopnja)) + geom_bar(stat="identity", width=1) +
+tr <- ggplot(pomankljivi, aes(x="", y=Število, fill=Stopnja)) + geom_bar(stat="identity", width=1) +
   coord_polar("y", start=0) + scale_fill_manual(values=c("#999999", "#E69F00", "#56B4E9", "#009E73")) +
   labs(x = NULL, y = NULL, fill = NULL, title = "Delež občin s pomankljivo opremljenostjo stanovanj leta 2015") +
   theme_classic() + theme(axis.line = element_blank(),axis.text = element_blank(),axis.ticks = element_blank(),plot.title = element_text(hjust = 0.5, color = "#666666")) +
   geom_text(aes(label = paste(round(Število / sum(Število) * 100, 1), "%"), x = 1.3),position = position_stack(vjust = 0.5))
-plot(prikaz_pomankljivo_opremljenih_stanovanj)
+plot(tr)
 
 #KAZALNIKI, ZEMLJEVIDI
 
 #gostota prebivalstva
-tm_shape(merge(obcine, gostota_z, by.x="OB_UIME", by.y="Obcina")) + tm_polygons("vrednost", title="Gostota naseljenosti v preb/km^2") +
+z1 <- tm_shape(merge(obcine, gostota_z, by.x="OB_UIME", by.y="Obcina")) + tm_polygons("vrednost", title="Gostota naseljenosti v preb/km^2") +
   tm_layout(title="Gostota prebivalstva Slovenije po občinah leta 2015", legend.position=c(0.82,0.005), legend.height=0.7, title.size=1.5)
 
 #place
-tm_shape(merge(obcine, placa_indeks_z, by.x="OB_UIME", by.y="Obcina")) + tm_polygons("vrednost", title="Vrednost indeksa") + 
+z2 <- tm_shape(merge(obcine, placa_indeks_z, by.x="OB_UIME", by.y="Obcina")) + tm_polygons("vrednost", title="Vrednost indeksa") + 
   tm_layout(title="Povprečne mesečne neto plače glede na slovensko povprečje (indeks = 100) po občinah leta 2015",legend.position=c(0.82,0.005), legend.height=0.7, title.size=1.5) 
 
 #brezposelni
-tm_shape(merge(obcine, brezposelni_z, by.x="OB_UIME", by.y="Obcina")) + tm_polygons("vrednost", title="Odstotki") + 
+z3 <- tm_shape(merge(obcine, brezposelni_z, by.x="OB_UIME", by.y="Obcina")) + tm_polygons("vrednost", title="Odstotki") + 
   tm_layout(title="Stopnja registrirane brezposelnosti (v %) po občinah v Sloveniji v letu 2015",legend.position=c(0.82,0.005), legend.height=0.7, title.size=1.5) 
 
 #stevilo stanovanj na 1000 prebivalcev
-tm_shape(merge(obcine, stanovanja_z, by.x="OB_UIME", by.y="Obcina")) + tm_polygons("vrednost", title="Število stanovanj na 1000 preb.") + 
+z4 <- tm_shape(merge(obcine, stanovanja_z, by.x="OB_UIME", by.y="Obcina")) + tm_polygons("vrednost", title="Število stanovanj na 1000 preb.") + 
   tm_layout(title="Število stanovanj na 1000 prebivalcev v Sloveniji po občinah v letu 2015",legend.position=c(0.82,0.005), legend.height=0.7, title.size=1.5) 

@@ -43,7 +43,7 @@ Plan dela:
 
 # Obdelava, uvoz in čiščenje podatkov
 
-```{r uvoz, echo=FALSE, message=FALSE}
+```{r uvoz, echo=FALSE, message=FALSE, results='hide'}
 source("uvoz/uvoz.r", encoding="UTF-8")
 ```
 
@@ -134,46 +134,80 @@ Iz podatkov o pomankljivostih leta 2015 sem izračunala okviren delež stanovanj
 
 Na podlagi predstavljene preliminarne analize sem se lotila vizualizacij. Stanje pri posameznih kazalnikih sem prikazala v tortnih diagramih, kjer so občine ustrezno grupirane. Naredila sem grafični prikaz gostote prebivalstva, kritičnosti brezposelnosti ter povprečne mesečne neto plače  v Sloveniji, vse za leto 2015. Dodala sem jim naslove, legende in oznake deležev.
 
-Preko vizualizacije gostote prebivalstva v Sloveniji leta 2015 sem ugotovila, da je več kot 90% slovenskih občin zelo redko poseljenih, kar ni presenetljivo glede na geografsko lego države in velik delež podeželskega prostora. Najredkeje poseljena je občina Solčava. 0.5 % predstavljajo občine z zelo gosto poselitvijo, kamor spada tudi Ljubljana. 
+Preko vizualizacije gostote prebivalstva v Sloveniji leta 2015 (diagram spodaj) sem ugotovila, da je več kot 90% slovenskih občin zelo redko poseljenih, kar ni presenetljivo glede na geografsko lego države in velik delež podeželskega prostora. Najredkeje poseljena je občina Solčava. 0.5 % predstavljajo občine z zelo gosto poselitvijo, kamor spada tudi Ljubljana.
 
-Naslednji tortni diagram prikazuje problem brezposelnosti v Sloveniji leta 2015. Kritičnost situacije (mejo) sem določila glede na slovensko povprečje povprečne stopnje brezposelnosti v Sloveniji, ki v tem letu znašala 12,3 %. Slabih 60 % občin ne trpi zaradi previsoke brezposelnosti oziroma je njihova brezposelnost nižja od slovenskega povprečja. Na drugi strani pa ima dobrih 40 % občin brezposelnost višjo od slovenskega povprečja.  Najmanj brezposelnih ima občina Žiri, najbolj kritično pa je v Rogašovcih. 
+```{r analiza, echo=FALSE, message=FALSE, warning=FALSE, results='hide'}
+source("analiza/analiza.r", encoding="UTF-8")
+```
 
-Izhodišče za diagram povprečne mesečne neto plače na ravni občin je slovensko povprečje, ki predstavlja indeks 100. Občine se pozicionirajo glede na ta indeks, torej občine z nižjo povprečno plačo imajo indeks pod 100, tiste z nadpovprečno pa večji od 100. Občine sem grupirala v tri skupine na že zgoraj opisan način, tiste z nizkimi, srednjimi in visokimi povprečnimi plačami. Delež občin, v katerih so povprečne plače visoke, znaša le dober odstotek. Največji je delež občin, v katerih so povprečne plače nizke in sicer 54 %. Občin, v katerih so povprečne plače srednje visoke, pa je slabih 45 %. Najvišji indeks je bil izmerjen v Cerkljah na Gorenjskem, najnižji pa v Kostanjevici na Krki.
-
-Na osnovi združitve podatkov iz napeljav in kazalnikov sem narisala nekaj črtnih diagramov in na ta način analizirala povezanosti parov posameznih spremenljivk: vodovodne napeljave in gostota poselitve, napeljave kanalizacije in gostota poselitve, ogrevalne napeljave in plače prebivalstva ter število kuhinj in število stanovanj. Grafom sem dodala naslove, legende, oznake in imena osi.
-
-V prvem grafu je prikazano število vodovodnih napeljav glede na gostoto poselitve v obdobju med 2002 in 2010. Opazila sem, da se pri redkejši poselitvi število vodovodnih napeljav povečuje počasneje. Zanemarljivo majhne so spremembe v občinah z zelo redko ter redko gostoto, situacija tam je bolj ali manj stabilna. Hitrejše povečevanje števila napeljav pa je opaziti pri občinah z gosto in zelo gosto poselitvijo.
-
-Graf, ki prikazuje število napeljav kanalizacije glede na gostoto poselitve v obdobju med 2002 in 2010 je vizualno zelo podoben prejšnjemu. Očitno enake zakonitosti kot za vodovod veljajo tudi za kanalizacijo in druge podobne napeljave. Redkejša ko je poseljenost, počasneje narašča število napeljav kanalizacije. V zelo redkih in redko poseljenih občinah teh sprememb skoraj ni opaziti.
-
-Tretji graf prikazuje število ogrevalnih napeljav in plače prebivalstva v obdobju med 2002 in 2010. V skupini občin z nizkimi in srednje visokimi plačami ostaja število ogrevalnih napeljav v času precej nespremenjeno, saj si ljudje to težje privoščijo. V občinah z visokimi povprečnimi plačami se v času število ogrevalnih napeljav rahlo povečuje in od leta 2002, ko je bilo napeljav skoraj 40 000 število naraste na slabih 42 000 v letu 2010, torej za 5 %. Ta rezultat je pričakovan, kajti ogrevalne napeljave so velika investicija, ki si jo lahko privoščijo le gospodinjstva z višjimi dohodki. 
-
-Grafično sem prikazala tudi deleže občin z zelo nizko, nizko, visoko in zelo visoko pomanjkljivo opremljenostjo stanovanj v letu 2015. Uporabila sem tortni diagram, ki sem mu dodala še naslov, legendo in vrednosti posameznih deležev. Opazila sem, da ima skoraj 40 % občin zelo visoko pomanjkljivo opremljena stanovanja. Kot pomanjkljiva sem obravnavala stanovanja brez vode, centralnega ogrevanja, elektrike ali javne kanalizacije. Razlog za tako visoke deleže je pretežna ruralnost slovenskega prostora.
-
-Kazalnike sem grafično prikazala tudi v obliki zemljevidov. Predstavljeni podatki so za leto 2015. Narisala sem zemljevid gostote poseljenosti, iz česar se jasno vidi kontrast med Ljubljano in ostalimi občinami. Ljubljana ima namreč poselitev od 1000 do 1200 prebivalcev na kvadratni kilometer. Nekoliko nižje, vendar glede na slovensko povprečje relativno visoke gostote, imajo tudi njene sosednje severozahodne občine in večje mestne občine na obali ter na Štajerskem.
-
-Drugi zemljevid prikazuje povprečne mesečne neto plače v primerjavi s slovenskim povprečjem (indeks 100). Izstopajo občine z indeksom pod 80 in sicer Bohinj, Bloke, Osilnica, Kostanjevica na Krki, Rečica ob Savinji, Tabor, Oplotnica, Makole, Hajdina, Moravske toplice in Gornji Petrovci. Najvišji indeks pa je v Cerkljah na Gorenjskem, to je nad 140. Kar nekaj je tudi občin z indeksom med 120 in 140, ki so neenakomerno razpršene po celi državi. 
-
-Z zemljevidom sem prikazala tudi stopnjo registrirane brezposelnosti (v %) po občinah. Najvišja stopnja brezposelnosti je na severovzhodnem in jugovzhodnem delu države, v pretežno ruralnih občinah. Izstopajo Kočevje, Črnomelj, Trbovlje in manjše občine v Prekmurju. Najmanj brezposelnih pa je v diagonalnem pasu od severozahoda proti jugovzhodu, z izjemo občine Ljubljana. 
-
-Zadnji zemljevid prikazuje število stanovanj na 1000 prebivalcev. Za večino občin se ta številka giblje med 300 in 400 stanovanji. Izstopa pa rob države na severni meji z Italijo. Razlog za to je najverjetneje dejstvo, da je na tem območju zelo razvit turizem. Veliko je apartmajev in pohodniških koč. Poleg tega pa ima veliko ljudi, ki živijo v prestolnici tam vikende. 
-
-
-#vzorčni primer
 ```{r vizualizacija, echo=FALSE, message=FALSE, warning=FALSE, results='hide'}
 source("vizualizacija/vizualizacija.r", encoding="UTF-8")
 ```
 
-Spodnji zemljevid prikazuje povprečno velikost družine za vsako občino.
-
-```{r zemljevid, echo=FALSE, fig.align='center', fig.cap='Zemljevid povprečnega števila otrok v družini'}
-ggplot() + geom_polygon(data=left_join(zemljevid, povprecja, by=c("OB_UIME"="obcina")),
-                        aes(x=long, y=lat, group=group, fill=povprecje)) +
-  ggtitle("Povprečno število otrok v družini") + xlab("") + ylab("") +
-  guides(fill=guide_colorbar(title="Povprečje"))
+```{r tortni_diagram1, echo=FALSE, fig.align='center'}
+t1
 ```
 
-***
+Naslednji tortni diagram prikazuje problem brezposelnosti v Sloveniji leta 2015. Kritičnost situacije (mejo) sem določila glede na slovensko povprečje povprečne stopnje brezposelnosti v Sloveniji, ki v tem letu znašala 12,3 %. Slabih 60 % občin ne trpi zaradi previsoke brezposelnosti oziroma je njihova brezposelnost nižja od slovenskega povprečja. Na drugi strani pa ima dobrih 40 % občin brezposelnost višjo od slovenskega povprečja.  Najmanj brezposelnih ima občina Žiri, najbolj kritično pa je v Rogašovcih. 
+
+```{r tortni_diagram2, echo=FALSE, fig.align='center'}
+t2
+```
+
+Izhodišče za diagram povprečne mesečne neto plače na ravni občin je slovensko povprečje, ki predstavlja indeks 100. Občine se pozicionirajo glede na ta indeks, torej občine z nižjo povprečno plačo imajo indeks pod 100, tiste z nadpovprečno pa večji od 100. Občine sem grupirala v tri skupine na že zgoraj opisan način, tiste z nizkimi, srednjimi in visokimi povprečnimi plačami. Delež občin, v katerih so povprečne plače visoke, znaša le dober odstotek. Največji je delež občin, v katerih so povprečne plače nizke in sicer 54 %. Občin, v katerih so povprečne plače srednje visoke, pa je slabih 45 %. Najvišji indeks je bil izmerjen v Cerkljah na Gorenjskem, najnižji pa v Kostanjevici na Krki.
+
+```{r tortni_diagram3, echo=FALSE, fig.align='center'}
+t3
+```
+
+Na osnovi združitve podatkov iz napeljav in kazalnikov sem narisala nekaj črtnih diagramov in na ta način analizirala povezanosti parov posameznih spremenljivk: vodovodne napeljave in gostota poselitve, napeljave kanalizacije in gostota poselitve, ogrevalne napeljave in plače prebivalstva ter število kuhinj in število stanovanj. Grafom sem dodala naslove, legende, oznake in imena osi.
+
+V prvem grafu  spodaj je prikazano število vodovodnih napeljav glede na gostoto poselitve v obdobju med 2002 in 2010. Opazila sem, da se pri redkejši poselitvi število vodovodnih napeljav povečuje počasneje. Zanemarljivo majhne so spremembe v občinah z zelo redko ter redko gostoto, situacija tam je bolj ali manj stabilna. Hitrejše povečevanje števila napeljav pa je opaziti pri občinah z gosto in zelo gosto poselitvijo.
+
+```{r graf1, echo=FALSE, fig.align='center'}
+g1
+```
+
+Graf, ki prikazuje število napeljav kanalizacije glede na gostoto poselitve v obdobju med 2002 in 2010 je vizualno zelo podoben prejšnjemu. Očitno enake zakonitosti kot za vodovod veljajo tudi za kanalizacijo in druge podobne napeljave. Redkejša ko je poseljenost, počasneje narašča število napeljav kanalizacije. V zelo redkih in redko poseljenih občinah teh sprememb skoraj ni opaziti.
+
+```{r graf2, echo=FALSE, fig.align='center'}
+g2
+```
+
+Tretji graf prikazuje število ogrevalnih napeljav in plače prebivalstva v obdobju med 2002 in 2010. V skupini občin z nizkimi in srednje visokimi plačami ostaja število ogrevalnih napeljav v času precej nespremenjeno, saj si ljudje to težje privoščijo. V občinah z visokimi povprečnimi plačami se v času število ogrevalnih napeljav rahlo povečuje in od leta 2002, ko je bilo napeljav skoraj 40 000 število naraste na slabih 42 000 v letu 2010, torej za 5 %. Ta rezultat je pričakovan, kajti ogrevalne napeljave so velika investicija, ki si jo lahko privoščijo le gospodinjstva z višjimi dohodki.
+
+```{r graf3, echo=FALSE, fig.align='center'}
+g3
+```
+
+Grafično sem prikazala tudi deleže občin z zelo nizko, nizko, visoko in zelo visoko pomanjkljivo opremljenostjo stanovanj v letu 2015. Uporabila sem tortni diagram, ki sem mu dodala še naslov, legendo in vrednosti posameznih deležev. Opazila sem, da ima skoraj 40 % občin zelo visoko pomanjkljivo opremljena stanovanja. Kot pomanjkljiva sem obravnavala stanovanja brez vode, centralnega ogrevanja, elektrike ali javne kanalizacije. Razlog za tako visoke deleže je pretežna ruralnost slovenskega prostora.
+
+```{r tortni_diagram, echo=FALSE, fig.align='center'}
+tr
+```
+
+Kazalnike sem grafično prikazala tudi v obliki zemljevidov. Predstavljeni podatki so za leto 2015. Narisala sem zemljevid gostote poseljenosti spodaj, iz česar se jasno vidi kontrast med Ljubljano in ostalimi občinami. Ljubljana ima namreč poselitev od 1000 do 1200 prebivalcev na kvadratni kilometer. Nekoliko nižje, vendar glede na slovensko povprečje relativno visoke gostote, imajo tudi njene sosednje severozahodne občine in večje mestne občine na obali ter na Štajerskem.
+
+```{r zemljevid1, echo=FALSE, fig.align='center', warning=FALSE}
+z1
+```
+
+Drugi zemljevid prikazuje povprečne mesečne neto plače v primerjavi s slovenskim povprečjem (indeks 100). Izstopajo občine z indeksom pod 80 in sicer Bohinj, Bloke, Osilnica, Kostanjevica na Krki, Rečica ob Savinji, Tabor, Oplotnica, Makole, Hajdina, Moravske toplice in Gornji Petrovci. Najvišji indeks pa je v Cerkljah na Gorenjskem, to je nad 140. Kar nekaj je tudi občin z indeksom med 120 in 140, ki so neenakomerno razpršene po celi državi. 
+
+```{r zemljevid2, echo=FALSE, fig.align='center', warning=FALSE}
+z2
+```
+
+Z zemljevidom sem prikazala tudi stopnjo registrirane brezposelnosti (v %) po občinah. Najvišja stopnja brezposelnosti je na severovzhodnem in jugovzhodnem delu države, v pretežno ruralnih občinah. Izstopajo Kočevje, Črnomelj, Trbovlje in manjše občine v Prekmurju. Najmanj brezposelnih pa je v diagonalnem pasu od severozahoda proti jugovzhodu, z izjemo občine Ljubljana. 
+```{r zemljevid3, echo=FALSE, fig.align='center', warning=FALSE}
+z3
+```
+
+Zadnji zemljevid prikazuje število stanovanj na 1000 prebivalcev. Za večino občin se ta številka giblje med 300 in 400 stanovanji. Izstopa pa rob države na severni meji z Italijo. Razlog za to je najverjetneje dejstvo, da je na tem območju zelo razvit turizem. Veliko je apartmajev in pohodniških koč. Poleg tega pa ima veliko ljudi, ki živijo v prestolnici tam vikende. 
+
+```{r zemljevid4, echo=FALSE, fig.align='center', warning=FALSE}
+z4
+```
 
 # Napredna analiza podatkov
 
