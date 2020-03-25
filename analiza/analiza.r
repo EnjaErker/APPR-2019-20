@@ -69,22 +69,13 @@ leta.skupine.kan$leto <- parse_integer(leta.skupine.kan$leto)
 #placa_ogrevanje
 placa_ogrevanje <- left_join(centralno_ogrevanje,placa_indeks,by="Obcina")
 colnames(placa_ogrevanje) <- c("obcina", "leto", "stevilo", "placa_indeks")
-levels <- c(0, 80, 90, Inf)
-labels <- c("1.","2.","3.")
+levels <- c(0, 90, 110, Inf)
+labels <- c("nizka","srednja","visoka")
 placa_ogrevanje <- placa_ogrevanje %>% mutate(razred = cut(placa_indeks, levels, labels = labels))
 placa_ogrevanje$stevilo <- parse_integer(placa_ogrevanje$stevilo)
 leta.razredi <- placa_ogrevanje %>% group_by(leto, razred) %>% summarise(povprecje = mean(stevilo))
+leta.razredi <- na.omit(leta.razredi)
 leta.razredi$leto <- parse_integer(leta.razredi$leto)
-
-#stanovanja_kuhinja
-stanovanja_kuhinja <- left_join(kuhinja,stanovanja,by="Obcina")
-colnames(stanovanja_kuhinja) <- c("obcina", "leto", "stevilo", "stanovanja")
-levels <- c(0,350,450,Inf)
-labels <- c("malo","srednje","veliko")
-stanovanja_kuhinja <- stanovanja_kuhinja %>% mutate(st_stan = cut(stanovanja, levels, labels = labels))
-stanovanja_kuhinja$stevilo <- parse_integer(stanovanja_kuhinja$stevilo)
-leta.st_stan <- stanovanja_kuhinja %>% group_by(leto, st_stan) %>% summarise(povprecje = mean(stevilo))
-leta.st_stan$leto <- parse_integer(leta.st_stan$leto)
 
 #POMANKLJIVOSTI:
 
@@ -101,7 +92,7 @@ delezi <- delezi %>% mutate(pomankljivost = cut(delez, levels, labels=labels))
 
 #brezposelni
 levels <- c(0,12,Inf)
-labels <- c("ne kritična","kritična")
+labels <- c("nekritična","kritična")
 brezposelni <- brezposelni %>% mutate(kriticnost = cut(vrednost, levels, labels = labels))
 #obcini z najmanj in najbolj kriticno brezposelnostjo
 y_max <- max(brezposelni[,"vrednost"])
@@ -110,8 +101,8 @@ y_min <- min(brezposelni[,"vrednost"])
 najmanj_kriticna <- brezposelni[brezposelni$'vrednost' == y_min, "Obcina"]
 
 #place
-levels <- c(0, 80, 90, Inf)
-labels <- c("1.","2.","3.")
+levels <- c(0, 90, 110, Inf)
+labels <- c("nizka","srednja","visoka")
 placa_indeks <- placa_indeks %>% mutate(razred = cut(vrednost, levels, labels = labels))
 #place, obcini z najvisjim in najnizjim indeksom
 y_max <- max(placa_indeks[,"vrednost"])
