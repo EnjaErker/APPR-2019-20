@@ -43,7 +43,7 @@ Plan dela:
 
 # Obdelava, uvoz in čiščenje podatkov
 
-```{r uvoz, echo=FALSE, message=FALSE, results='hide'}
+```{r uvoz, echo=FALSE, message=FALSE, warning=FALSE, results='hide'}
 source("uvoz/uvoz.r", encoding="UTF-8")
 ```
 
