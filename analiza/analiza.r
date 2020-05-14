@@ -1,4 +1,4 @@
-# ANALIZA
+# OSNOVNA ANALIZA
 
 #NAPELJAVE
 
@@ -88,6 +88,9 @@ levels <- c(0,25,50,75,Inf)
 labels <- c("zelo nizka","nizka","visoka","zelo visoka")
 delezi <- delezi %>% mutate(pomankljivost = cut(delez, levels, labels=labels))
 
+stan <- pomankljivosti %>% filter(tip == "st_vseh_stanovanj")
+stan <- stan[,-2]
+
 #PREOSTALO ZA VIZUALIZACIJE
 
 #brezposelni
@@ -160,3 +163,90 @@ brezposelni_z <- brezposelni_z[-1,]
 stanovanja_z <- kazalniki_za_zemljevide %>% filter(tip == "st_stan_na_tisoc_preb")
 stanovanja_z <- stanovanja_z[,-2]
 stanovanja_z <- stanovanja_z[-1,]
+
+# NAPREDNA ANALIZA
+
+#centralno ogrevanje kot pomankljivost
+cent_ogr_poman <- pomankljivosti %>% filter(tip == "centralno_ogrevanje")
+cent_ogr_poman <- cent_ogr_poman[,-2]
+
+#poenotenje obcin
+cent_ogr_poman$Obcina <- gsub("Ankaran/Ancarano", "Ankaran", cent_ogr_poman$Obcina)
+cent_ogr_poman$Obcina <- gsub("Koper/Capodistria", "Koper", cent_ogr_poman$Obcina)
+cent_ogr_poman$Obcina <- gsub("Trebnje)", "Trebnje", cent_ogr_poman$Obcina)
+cent_ogr_poman$Obcina <- gsub("Miren - Kostanjevica", "Miren-Kostanjevica", cent_ogr_poman$Obcina)
+cent_ogr_poman$Obcina <- gsub("Rače - Fram", "Rače-Fram", cent_ogr_poman$Obcina)
+cent_ogr_poman$Obcina <- gsub("Šempeter - Vrtojba", "Šempeter-Vrtojba", cent_ogr_poman$Obcina)
+cent_ogr_poman$Obcina <- gsub("Piran/Pirano", "Piran", cent_ogr_poman$Obcina)
+cent_ogr_poman$Obcina <- gsub("Mokronog - Trebelno", "Mokronog-Trebelno", cent_ogr_poman$Obcina)
+cent_ogr_poman$Obcina <- gsub("Renče - Vogrsko", "Renče-Vogrsko", cent_ogr_poman$Obcina)
+cent_ogr_poman$Obcina <- gsub("Dobrova - Polhov Gradec", "Dobrova-Polhov Gradec", cent_ogr_poman$Obcina)
+cent_ogr_poman$Obcina <- gsub("Hrpelje - Kozina", "Hrpelje-Kozina", cent_ogr_poman$Obcina)
+cent_ogr_poman$Obcina <- gsub("Sveta Trojica v Slov. goricah", "Sveta Trojica v Slovenskih goricah", cent_ogr_poman$Obcina)
+cent_ogr_poman$Obcina <- gsub("Sveti Jurij v Slov. goricah", "Sveti Jurij v Slovenskih goricah", cent_ogr_poman$Obcina)
+cent_ogr_poman$Obcina <- gsub("Gorenja vas - Poljane", "Gorenja vas-Poljane", cent_ogr_poman$Obcina)
+cent_ogr_poman$Obcina <- gsub("Hoče - Slivnica", "Hoče-Slivnica", cent_ogr_poman$Obcina)
+cent_ogr_poman$Obcina <- gsub("Izola/Isola", "Izola", cent_ogr_poman$Obcina)
+cent_ogr_poman$Obcina <- gsub("Log - Dragomer", "Log-Dragomer", cent_ogr_poman$Obcina)
+cent_ogr_poman$Obcina <- gsub("Lendava/Lendva", "Lendava", cent_ogr_poman$Obcina)
+cent_ogr_poman$Obcina <- gsub("Dobrovnik/Dobronak", "Dobrovnik", cent_ogr_poman$Obcina)
+cent_ogr_poman$Obcina <- gsub("Hodoš/Hodos", "Hodoš", cent_ogr_poman$Obcina)
+
+stan$Obcina <- gsub("Ankaran/Ancarano", "Ankaran", stan$Obcina)
+stan$Obcina <- gsub("Koper/Capodistria", "Koper", stan$Obcina)
+stan$Obcina <- gsub("Trebnje)", "Trebnje", stan$Obcina)
+stan$Obcina <- gsub("Miren - Kostanjevica", "Miren-Kostanjevica", stan$Obcina)
+stan$Obcina <- gsub("Rače - Fram", "Rače-Fram", stan$Obcina)
+stan$Obcina <- gsub("Šempeter - Vrtojba", "Šempeter-Vrtojba", stan$Obcina)
+stan$Obcina <- gsub("Piran/Pirano", "Piran", stan$Obcina)
+stan$Obcina <- gsub("Mokronog - Trebelno", "Mokronog-Trebelno", stan$Obcina)
+stan$Obcina <- gsub("Renče - Vogrsko", "Renče-Vogrsko", stan$Obcina)
+stan$Obcina <- gsub("Dobrova - Polhov Gradec", "Dobrova-Polhov Gradec", stan$Obcina)
+stan$Obcina <- gsub("Hrpelje - Kozina", "Hrpelje-Kozina", stan$Obcina)
+stan$Obcina <- gsub("Sveta Trojica v Slov. goricah", "Sveta Trojica v Slovenskih goricah", stan$Obcina)
+stan$Obcina <- gsub("Sveti Jurij v Slov. goricah", "Sveti Jurij v Slovenskih goricah", stan$Obcina)
+stan$Obcina <- gsub("Gorenja vas - Poljane", "Gorenja vas-Poljane", stan$Obcina)
+stan$Obcina <- gsub("Hoče - Slivnica", "Hoče-Slivnica", stan$Obcina)
+stan$Obcina <- gsub("Izola/Isola", "Izola", stan$Obcina)
+stan$Obcina <- gsub("Log - Dragomer", "Log-Dragomer", stan$Obcina)
+stan$Obcina <- gsub("Lendava/Lendva", "Lendava", stan$Obcina)
+stan$Obcina <- gsub("Dobrovnik/Dobronak", "Dobrovnik", stan$Obcina)
+stan$Obcina <- gsub("Hodoš/Hodos", "Hodoš", stan$Obcina)
+
+#zdruzitev centralnega ogrevanja in plac
+a1 <- left_join(cent_ogr_poman,placa_indeks_z,by="Obcina")
+names(a1) <- c("Obcina","Brez_ogrevanja","Place")
+
+#zdruzitev centralnega ogrevanja in brezposelosti
+a2 <- left_join(cent_ogr_poman,brezposelni_z,by="Obcina")
+names(a2) <- c("Obcina","Brez_ogrevanja","Brezposelni_ods")
+
+a <- left_join(a1,a2,by="Obcina")
+t <- left_join(a,stan,by="Obcina")
+t$'delez' <- (t$'Brez_ogrevanja.x' / t$'vrednost')*100
+
+#javna kanalizacija kot pomankljivost
+jav_kan_poman <- pomankljivosti %>% filter(tip == "javna_kanalizacija")
+jav_kan_poman <- jav_kan_poman[,-2]
+
+#poenotenje imen obcin
+jav_kan_poman$Obcina <- gsub("Ankaran/Ancarano", "Ankaran", jav_kan_poman$Obcina)
+jav_kan_poman$Obcina <- gsub("Koper/Capodistria", "Koper", jav_kan_poman$Obcina)
+jav_kan_poman$Obcina <- gsub("Trebnje)", "Trebnje", jav_kan_poman$Obcina)
+jav_kan_poman$Obcina <- gsub("Miren - Kostanjevica", "Miren-Kostanjevica", jav_kan_poman$Obcina)
+jav_kan_poman$Obcina <- gsub("Rače - Fram", "Rače-Fram", jav_kan_poman$Obcina)
+jav_kan_poman$Obcina <- gsub("Šempeter - Vrtojba", "Šempeter-Vrtojba", jav_kan_poman$Obcina)
+jav_kan_poman$Obcina <- gsub("Piran/Pirano", "Piran", jav_kan_poman$Obcina)
+jav_kan_poman$Obcina <- gsub("Mokronog - Trebelno", "Mokronog-Trebelno", jav_kan_poman$Obcina)
+jav_kan_poman$Obcina <- gsub("Renče - Vogrsko", "Renče-Vogrsko", jav_kan_poman$Obcina)
+jav_kan_poman$Obcina <- gsub("Dobrova - Polhov Gradec", "Dobrova-Polhov Gradec", jav_kan_poman$Obcina)
+jav_kan_poman$Obcina <- gsub("Hrpelje - Kozina", "Hrpelje-Kozina", jav_kan_poman$Obcina)
+jav_kan_poman$Obcina <- gsub("Sveta Trojica v Slov. goricah", "Sveta Trojica v Slovenskih goricah", jav_kan_poman$Obcina)
+jav_kan_poman$Obcina <- gsub("Sveti Jurij v Slov. goricah", "Sveti Jurij v Slovenskih goricah", jav_kan_poman$Obcina)
+jav_kan_poman$Obcina <- gsub("Gorenja vas - Poljane", "Gorenja vas-Poljane", jav_kan_poman$Obcina)
+jav_kan_poman$Obcina <- gsub("Hoče - Slivnica", "Hoče-Slivnica", jav_kan_poman$Obcina)
+jav_kan_poman$Obcina <- gsub("Izola/Isola", "Izola", jav_kan_poman$Obcina)
+jav_kan_poman$Obcina <- gsub("Log - Dragomer", "Log-Dragomer", jav_kan_poman$Obcina)
+jav_kan_poman$Obcina <- gsub("Lendava/Lendva", "Lendava", jav_kan_poman$Obcina)
+jav_kan_poman$Obcina <- gsub("Dobrovnik/Dobronak", "Dobrovnik", jav_kan_poman$Obcina)
+jav_kan_poman$Obcina <- gsub("Hodoš/Hodos", "Hodoš", jav_kan_poman$Obcina)

@@ -105,17 +105,6 @@ Pretvorba razpredelnic v *tidy data*
   - združitev podatkov glede na tip in vrednost
 
 
-Spodnji graf prikazuje porazdelitev števila naselij v občinah.
-
-
-????????????????????????????
-```{r histogram, echo=FALSE, message=FALSE, fig.align='center', fig.cap='Histogram števila naselij v občinah'}
-ggplot(obcine, aes(x=naselja)) + geom_histogram() +
-  ggtitle("Pogostost števila naselij") + xlab("Število naselij") + ylab("Število občin")
-```
-
-***
-
 # Analiza in vizualizacija podatkov
 
 Prvi korak v analizi je bila analiza napeljav od leta 2002 do leta 2010. Iz tabele napeljave sem naredila ločene tabele za posamezne vrste napeljav z uporabo ukaza filter za vodovod, centralno ogrevanje, električni tok, kopalnico, stranišče, kuhinjo in kanalizacijo. V njih so vrednosti, ki predstavljajo število stanovanj z določeno vrsto napeljave, npr. vodovodom. 
@@ -215,19 +204,24 @@ z4
 source("analiza/analiza.r", encoding="UTF-8")
 ```
 
-Spodnji graf prikazuje povezavo med številom naselij in površino občine.
-
-```{r graf, echo=FALSE, fig.align='center', fig.cap='Povezava med številom naselij in površino občine'}
-ggplot(inner_join(obcine, data.frame(obcina=names(skupine),
-                                     skupina=factor(skupine)), by="obcina")
-, aes(x=povrsina, y=naselja, color=skupina, size=prebivalci/1000)) + geom_point() +
-  ggtitle("Število naselij glede na površino občine") +
-  xlab(expression("Površina (km"^2 * ")")) + ylab("Št. naselij") +
-  guides(color=guide_legend(title="Skupina"),
-         size=guide_legend(title="Prebivalci (* 1000)"))
+```{r vizualizacija, echo=FALSE, message=FALSE, warning=FALSE, results='hide'}
+source("vizualizacija/vizualizacija.r", encoding="UTF-8")
 ```
 
-***
+V napredni analizi podatkov sem se osredotočila na predikcije pomankljivosti centralnega ogrevanjanja glede na dva kazalnika (plače in brezposelnost). Izhajala sem iz podatkov za leto 2015. Za omenjeno pomankljivost sem se odločila zato, ker se ostale pomankljivosti, npr. električni tok in voda, nanašajo na odločitve občin (ne na odločitve posameznikov). Predikcije sem izvedla z metodo bivariatne linearne regresije. 
+
+Najprej sem se lotila vprašanja vpliva plač prebivalstva na delež stanovanj brez centralnega ogrevanja. Ugotovila sem, da obstaja linearna povezanost, ki je prikazana v grafu spodaj. Večina občin je zgoščena  na intervalu indeksa plač od 80 do 100. V nadaljni analizi bi se dalo izločiti tudi nekaj osamelcev (točke oziroma občine z več kot 60 % stanovanj brez centralnega ogrevanja ali pa tiste z indeksom plač nad 140) in na ta način dobiti še bolj prilegajočo se premico. Ocena regresijskega koeficienta b je -0,257. To pomeni, da ocenjujemo, da če se indeks plač poveča za 1 enoto, to povzroči znižanje deleža stanovanj brez centralnega ogrevanja za 0,257 %. Koeficient je statistično značilen pri stopnji značilnosti 0,001. Interpretacija konstante regresijskega modela ni smiselna, kajti nima pomena. Vrednost konstante je 48,9, kar bi teoretično pomenilo, da če bi bilo prebivalstvo brez plač, bi znašal delež stanovanj brez centralnega ogrevanja slabih 50 %.
+
+```{r linearnimodel1, echo=FALSE, fig.align='center', warning=FALSE}
+m1
+```
+
+Ugotavljala sem še vpliv stopnje brezposelnosti na delež stanovanj brez centralnega ogrevanja v posamezni občini. Občine v grafu spodaj so zelo razpršene. Večina slovenskih občin ima brezposelnost med 7 % in 15 %, kar je blizu naravne stopnje brezposelnosti. Ocena regresijskega koeficienta b je 0,332. To pomeni, da ocenjujemo, da če se stopnja registrirane brezposelnosti poveča za 1 odstotek, to povzroči povečanje deleža stanovanj brez centralnega ogrevanja za  0,332 %. Koeficient je statistično značilen pri stopnji značilnosti 0,1. Interpretacija konstante regresijskega modela ni smiselna, kajti nima pomena. Vrednost konstante je 21,9, kar bi teoretično pomenilo, da če bi bilo prebivalstvo polno zaposleno, bi znašal delež stanovanj brez centralnega ogrevanja še vedno okoli 20 %.
+
+```{r linearnimodel2, echo=FALSE, fig.align='center', warning=FALSE}
+m2
+```
+ 
 
 ```{r shiny, echo=FALSE}
 #shinyAppDir("shiny", options=list(width="100%", height=600))
