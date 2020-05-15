@@ -81,19 +81,19 @@ tr <- ggplot(pomankljivi, aes(x="", y=Število, fill=Stopnja)) + geom_bar(stat="
 #KAZALNIKI, ZEMLJEVIDI
 
 #gostota prebivalstva
-z1 <- tm_shape(merge(obcine, gostota_z, by.x="OB_UIME", by.y="Obcina")) + tm_polygons("vrednost", title="Gostota naseljenosti v preb/km^2") +
+z1 <- tm_shape(merge(obcine, gostota_z, by.x="OB_UIME", by.y="Obcina"),projection="merc") + tm_polygons("vrednost", title="Gostota naseljenosti v preb/km^2") +
   tm_layout(title="Gostota prebivalstva Slovenije po občinah leta 2015", legend.position=c(0.82,0.005), legend.height=0.7, title.size=1.5)
 
 #place
-z2 <- tm_shape(merge(obcine, placa_indeks_z, by.x="OB_UIME", by.y="Obcina")) + tm_polygons("vrednost", title="Vrednost indeksa") + 
+z2 <- tm_shape(merge(obcine, placa_indeks_z, by.x="OB_UIME", by.y="Obcina"),projection="merc") + tm_polygons("vrednost", title="Vrednost indeksa") + 
   tm_layout(title="Povprečne mesečne neto plače glede na slovensko povprečje (indeks = 100) po občinah leta 2015",legend.position=c(0.82,0.005), legend.height=0.7, title.size=1.5) 
 
 #brezposelni
-z3 <- tm_shape(merge(obcine, brezposelni_z, by.x="OB_UIME", by.y="Obcina")) + tm_polygons("vrednost", title="Odstotki") + 
+z3 <- tm_shape(merge(obcine, brezposelni_z, by.x="OB_UIME", by.y="Obcina"),projection="merc") + tm_polygons("vrednost", title="Odstotki") + 
   tm_layout(title="Stopnja registrirane brezposelnosti (v %) po občinah v Sloveniji v letu 2015",legend.position=c(0.82,0.005), legend.height=0.7, title.size=1.5) 
 
 #stevilo stanovanj na 1000 prebivalcev
-z4 <- tm_shape(merge(obcine, stanovanja_z, by.x="OB_UIME", by.y="Obcina")) + tm_polygons("vrednost", title="Število stanovanj na 1000 preb.") + 
+z4 <- tm_shape(projection="merc",merge(obcine, stanovanja_z, by.x="OB_UIME", by.y="Obcina")) + tm_polygons("vrednost", title="Število stanovanj na 1000 preb.") + 
   tm_layout(title="Število stanovanj na 1000 prebivalcev v Sloveniji po občinah v letu 2015",legend.position=c(0.82,0.005), legend.height=0.7, title.size=1.5) 
 
 #LINEARNA REGRESIJA

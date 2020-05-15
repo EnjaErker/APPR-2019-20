@@ -1,19 +1,5 @@
 # UVOZ
 
-#paketi
-install.packages("shiny")
-install.packages("XML")
-install.packages("rvest")
-install.packages("xlsx")
-install.packages("rJava")
-install.packages("xlsxjars")
-install.packages("dplyr")
-install.packages("data.table")
-install.packages("rgeos")
-install.packages("mosaic")
-install.packages("maptools")
-install.packages("tmap")
-
 #nastavitev , in .
 osnovne.nastavitve <- function(){sl <- locale("sl", decimal_mark=",", grouping_mark=".")}
 
@@ -35,7 +21,7 @@ napeljave <- uvozi.napeljave()
 
 #funkcija, ki uvozi excel datoteko o pomankljivostih, poimenuje stolpce in izbriše zadnjih 20 vrstic z nepomembnimi podatki
 uvozi.pomankljivosti <- function(){
-  pomankljivosti <- read.xlsx("podatki/pomankljivosti1.xlsx", sheetIndex=1, startRow=4,encoding="UTF-8")
+  pomankljivosti <- read_xlsx("podatki/pomankljivosti1.xlsx", sheet=1, skip=3)
   names(pomankljivosti) <- c("Obcina", "st_vseh_stanovanj","centralno_ogrevanje", "voda", "elektrika", "javna_kanalizacija")
   pomankljivosti=pomankljivosti[ -c(213:233), ]
   return(pomankljivosti)}
@@ -47,9 +33,8 @@ pomankljivosti <- uvozi.pomankljivosti()
 
 #funkcija, ki uvozi excel datoteko s kazalniki, poimenuje stolpce, izbriše zadnje dva stolpca
 uvozi.kazalnike <- function(){
-  kazalniki <- read.xlsx("podatki/kazalniki1.xlsx", sheetIndex=1, startRow =1, colNames=TRUE, rowNames=FALSE, encoding="UTF-8")
-  names(kazalniki) <- c("Obcina", "gostota_prebivalstva", "pov_mes_neto_placa_indeks", "st_reg_brezposelnosti_ods", "st_stan_na_tisoc_preb", "1", "2")
-  kazalniki=select(kazalniki,-6,-7)
+  kazalniki <- read_xlsx("podatki/kazalniki1.xlsx", sheet=1)
+  names(kazalniki) <- c("Obcina", "gostota_prebivalstva", "pov_mes_neto_placa_indeks", "st_reg_brezposelnosti_ods", "st_stan_na_tisoc_preb")
   return(kazalniki)}
 
 #zapis podatkov v razpredelnico kazalniki in kazalniki_za_zemljevide
