@@ -16,4 +16,4 @@ library(mosaic)
 library(rgdal)
 library(maptools)
 library(tmap)
-
+source("lib/uvozi.zemljevid.r",encoding="UTF-8")

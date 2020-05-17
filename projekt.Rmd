@@ -200,14 +200,6 @@ z4
 
 # Napredna analiza podatkov
 
-```{r analiza, echo=FALSE, message=FALSE}
-source("analiza/analiza.r", encoding="UTF-8")
-```
-
-```{r vizualizacija, echo=FALSE, message=FALSE, warning=FALSE, results='hide'}
-source("vizualizacija/vizualizacija.r", encoding="UTF-8")
-```
-
 V napredni analizi podatkov sem se osredotočila na predikcije pomankljivosti centralnega ogrevanjanja glede na dva kazalnika (plače in brezposelnost). Izhajala sem iz podatkov za leto 2015. Za omenjeno pomankljivost sem se odločila zato, ker se ostale pomankljivosti, npr. električni tok in voda, nanašajo na odločitve občin (ne na odločitve posameznikov). Predikcije sem izvedla z metodo bivariatne linearne regresije. 
 
 Najprej sem se lotila vprašanja vpliva plač prebivalstva na delež stanovanj brez centralnega ogrevanja. Ugotovila sem, da obstaja linearna povezanost, ki je prikazana v grafu spodaj. Večina občin je zgoščena  na intervalu indeksa plač od 80 do 100. V nadaljni analizi bi se dalo izločiti tudi nekaj osamelcev (točke oziroma občine z več kot 60 % stanovanj brez centralnega ogrevanja ali pa tiste z indeksom plač nad 140) in na ta način dobiti še bolj prilegajočo se premico. Ocena regresijskega koeficienta b je -0,257. To pomeni, da ocenjujemo, da če se indeks plač poveča za 1 enoto, to povzroči znižanje deleža stanovanj brez centralnega ogrevanja za 0,257 %. Koeficient je statistično značilen pri stopnji značilnosti 0,001. Interpretacija konstante regresijskega modela ni smiselna, kajti nima pomena. Vrednost konstante je 48,9, kar bi teoretično pomenilo, da če bi bilo prebivalstvo brez plač, bi znašal delež stanovanj brez centralnega ogrevanja slabih 50 %.
