@@ -81,7 +81,9 @@ tr <- ggplot(pomankljivi, aes(x="", y=Število, fill=Stopnja)) + geom_bar(stat="
 #KAZALNIKI, ZEMLJEVIDI
 
 #gostota prebivalstva
-z1 <- tm_shape(merge(obcine, gostota_z, by.x="OB_UIME", by.y="Obcina"),projection="merc") + tm_polygons("vrednost", title="Gostota naseljenosti v preb/km^2") +
+proj4string(obcine)<- CRS("+proj=utm +zone=10+datum=WGS84")
+
+z1 <- tm_shape(merge(obcine, gostota_z, by.x="OB_UIME", by.y="Obcina")) + tm_polygons("vrednost", title="Gostota naseljenosti v preb/km^2") +
   tm_layout(title="Gostota prebivalstva Slovenije po občinah leta 2015", legend.position=c(0.82,0.005), legend.height=0.7, title.size=1.5)
 
 #place
