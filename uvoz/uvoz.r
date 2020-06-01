@@ -45,6 +45,6 @@ kazalniki_za_zemljevide <- uvozi.kazalnike()
 
 #uvoz zemljevida obcin
 source("https://raw.githubusercontent.com/jaanos/APPR-2019-20/master/lib/uvozi.zemljevid.r")
-#obcine <- uvozi.zemljevid("http://baza.fmf.uni-lj.si/OB.zip", "OB",
-             #             pot.zemljevida="OB", encoding="Windows-1250")
+obcine <- uvozi.zemljevid("http://baza.fmf.uni-lj.si/OB.zip", "OB",
+                          pot.zemljevida="OB", encoding="Windows-1250")
 
