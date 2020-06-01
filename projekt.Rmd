@@ -29,81 +29,61 @@ source("lib/rstudio.r", encoding="UTF-8")
 
 Tema: stanovanjske razmere in opremljenost stanovanj (po občinah v Sloveniji)
 
-Osnovna ideja: 
--	analizirati osnovne indikatorje opremljenosti stanovanj po občinah (napeljave, prostori, površine, …) za leto 2015 (napeljave za zadnje razpoložljivo leto 2010),
--	analizirati druge indikatorje (razvoja) občin (neto plače, brezposelnost, gostota prebivalstva) za leto 2015,
--	poiskati povezave (korelacije) med izbranimi spremenljivkami za leto 2015,
--	ugotoviti medsebojne vplive (regresije) določenih spremenljivk (npr. vpliv brezposelnosti na opremljenost ali vpliv starosti prebivalstva na opremljenost) za leto 2015,
--	analizirati časovno serijo za napeljave  (2002-2008, letni podatki).
+Osnovna ideja je analizirati osnovne indikatorje opremljenosti stanovanj po občinah (npr. vodovod, kopalnica, ...) za leto 2015 (napeljave za zadnje razpoložljivo leto 2010). Poleg tega sem želela analizirati tudi druge indikatorje (razvoja) občin (neto plače, brezposelnost, gostota prebivalstva) za leto 2015 in poiskati povezave (korelacije) med izbranimi spremenljivkami za leto 2015. Za konec sem se posvetila še iskanju medsebojnih vplivov (regresij) določenih spremenljivk (npr. vpliv plač na obseg napeljav centralnega ogrevanja) za leto 2015. Med drugim pa sem analizirala tudi časovno serijo za napeljave (2002-2008, letni podatki).
 
-Plan dela: 
--	Razvrščanje podatkov (iskanje občin s podobnimi lastnostmi): po opremljenosti, po razmerah,
--	Predikcija (napovedovanje časovne vrste, trendi): napovedovanje razvoja opremljenosti stanovanj glede na razvitost občine, večja opremljenost <- večje neto plače, slabše/boljše razmere <– večja/manjša gostota naseljenosti občine.
-
-
+Plan dela, ki sem mu sledila, se je začel z uvozom podatkom predstavljenih nekoliko kasneje. Te sem nato razvrstila (iskanje občin s podobnimi lastnostmi), na primer po opremljenosti in razmerah. Potem sem se lotila predikcije (napovedovanje časovne vrste, trendi), napovedovala sem obseg napeljav centralnega ogrevanja ob spremembah plač in brezposelnosti.
+ 
 # Obdelava, uvoz in čiščenje podatkov
 
 ```{r uvoz, echo=FALSE, message=FALSE, warning=FALSE, results='hide'}
 source("uvoz/uvoz.r", encoding="UTF-8")
 ```
 
-Oblike vhodnih podatkov:
--	Csv datoteka z različnimi ločili,
--	Excel datoteka.
+Oblike vhodnih podatkov: Csv datoteke z različnimi ločili in Excel datoteke.
 
 Spletne strani oziroma viri podatkov:
 
-1.	https://pxweb.stat.si/SiStatDb/pxweb/sl/20_Ekonomsko/20_Ekonomsko__19_gradbenistvo__95_arhivski_podatki__06_19071_stanov_sklad/1907104S.px/
-2.	https://pxweb.stat.si/SiStatDb/pxweb/sl/10_Dem_soc/10_Dem_soc__08_zivljenjska_raven__25_STANOVANJA__02_08611-stanovanja_OBC/0861140S.px/
-3.	https://www.stat.si/obcine
+1.	https://pxweb.stat.si/SiStatDb/pxweb/sl/20_Ekonomsko/20_Ekonomsko__19_gradbenistvo__95_arhivski_podatki__06_19071_stanov_sklad/1907104S.px/,
+2.	https://pxweb.stat.si/SiStatDb/pxweb/sl/10_Dem_soc/10_Dem_soc__08_zivljenjska_raven__25_STANOVANJA__02_08611-stanovanja_OBC/0861140S.px/,
+3.	https://www.stat.si/obcine.
 
 Podatki so v treh razpredelnicah, sprva še niso v obliki *tidy data*.
 
 1. `napeljave` - podatki o napeljavah za vsako občino:
-  - `občina` - imenska spremenljivka: ime občine (neurejen faktor, character)
-  - `vodovod` - meritev: število stanovanj z vodovodom (število, integer)
-  - `kanalizacija` - meritev: število stanovanj s kanalizacijo (število, integer) 
-  - `električni tok` - meritev: število stanovanj z električnim tokom (število, integer)
-  - `centralno ogrevanje` - meritev: število stanovanj z centralnim ogrevanjem (število, integer)
-  - `kopalnica` - meritev: število stanovanj s kopalnico (število, integer)
-  - `stranišče` - meritev: število stanovanj s straniščem (število, integer)
-  - `kuhinja` - meritev: število stanovanj z kuhinjo (število, integer)
+  - `občina` - imenska spremenljivka: ime občine (neurejen faktor, character),
+  - `vodovod` - meritev: število stanovanj z vodovodom (število, integer),
+  - `kanalizacija` - meritev: število stanovanj s kanalizacijo (število, integer),
+  - `električni tok` - meritev: število stanovanj z električnim tokom (število, integer),
+  - `centralno ogrevanje` - meritev: število stanovanj z centralnim ogrevanjem (število, integer),
+  - `kopalnica` - meritev: število stanovanj s kopalnico (število, integer),
+  - `stranišče` - meritev: število stanovanj s straniščem (število, integer),
+  - `kuhinja` - meritev: število stanovanj z kuhinjo (število, integer).
 
 2. `kazalniki` - podatki o statističnih kazalniki za vsako občino:
-  - `občina` - imenska spremenljivka: ime občine (neurejen faktor, character)
-  - `gostota prebivalstva (preb/km2)` - meritev: gostota prebivalstva v enotah prebivalcev na kvadratni kilometer (število, numeric)
-  - `povprečna mesečna neto plača (indeks)` - meritev: povprečna mesečna neto plača podana v indeksu (število, integer) 
-  - `stopnja registrirane brezposelnosti (odstotek)` - meritev: stopnja registrirane brezposelnosti podana v odstotkih (število, numeric)
-  - `število stanovanj (na 1000 prebivalcev)` - meritev: število stanovanj v posamezni občini, podano na 1000 prebivalcev (število, integer)
+  - `občina` - imenska spremenljivka: ime občine (neurejen faktor, character),
+  - `gostota prebivalstva (preb/km2)` - meritev: gostota prebivalstva v enotah prebivalcev na kvadratni kilometer (število, numeric),
+  - `povprečna mesečna neto plača (indeks)` - meritev: povprečna mesečna neto plača podana v indeksu (število, integer),
+  - `stopnja registrirane brezposelnosti (odstotek)` - meritev: stopnja registrirane brezposelnosti podana v odstotkih (število, numeric),
+  - `število stanovanj (na 1000 prebivalcev)` - meritev: število stanovanj v posamezni občini, podano na 1000 prebivalcev (število, integer).
 
 3. `pomankljivosti` - podatki o pomankljivostih stanovanj za vsako občino:
-  - `občina` - imenska spremenljivka: ime občine (neurejen faktor, character)
-  - `število vseh stanovanj` - meritev: število vseh stanovanj (število, integer)
-  - `število stanovanj brez centralnega ogrevanja` - meritev: število stanovanj brez centralnega ogrevanja (število, integer) 
-  - `število stanovanj brez vode` - meritev: število stanovanj brez vode (število, integer)
-  - `število stanovanj brez elektrike` - meritev: število stanovanj brez elektrike (število, integer)
-  - `število stanovanj brez priklopa na javno kanalizacijo` - meritev: število stanovanj brez priklopa na javno kanalizacijo (število, integer)
+  - `občina` - imenska spremenljivka: ime občine (neurejen faktor, character),
+  - `število vseh stanovanj` - meritev: število vseh stanovanj (število, integer),
+  - `število stanovanj brez centralnega ogrevanja` - meritev: število stanovanj brez centralnega ogrevanja (število, integer),
+  - `število stanovanj brez vode` - meritev: število stanovanj brez vode (število, integer),
+  - `število stanovanj brez elektrike` - meritev: število stanovanj brez elektrike (število, integer),
+  - `število stanovanj brez priklopa na javno kanalizacijo` - meritev: število stanovanj brez priklopa na javno kanalizacijo (število, integer).
 
-Pretvorba razpredelnic v *tidy data*
+Za vsako razpredelnico je spodaj na kratko predstavljena pretvorba v *tidy data*.
 
-1.`napeljave`
-  - poimenovanje prvega stolpca
-  - izbris vrstic (občin) s pomankljivimi podatki (v konkretnem primeru NA ali z)
-  - konstrukcija 'podtabel' za lažjo kasnejšo analizo (izbira le nekaterih stolpcev, sprememba character -> numeric)
-  - zružitev podatkov glede na leto, število in tip podatka
-  - filtriranje v posamezne podtabele (vodovod, kanalizacija, centralno ogrevanje, električni tok, stranišče, kuhinja, kopalnica)
+1.`napeljave` : poimenovanje prvega stolpca, izbris vrstic (občin) s pomankljivimi podatki (v konkretnem primeru NA ali z), konstrukcija 'podtabel' za lažjo kasnejšo analizo (izbira le nekaterih stolpcev, sprememba character -> numeric), zružitev podatkov glede na leto, število in tip podatka in filtriranje v posamezne podtabele (vodovod, kanalizacija, centralno ogrevanje, električni tok, stranišče, kuhinja, kopalnica).
 
-2.`kazalniki`
-  - poimenovanje stolpcev
-  - izbris zadnjih dveh stolpcev, ki jih ne potrebujem
-  - izbris podvojenih občin
-  - združitev glede na tip podatka in število
+2.`kazalniki` : poimenovanje stolpcev, izbris zadnjih dveh stolpcev, ki jih ne potrebujem, izbris podvojenih občin in združitev glede na tip podatka in število.
 
-4.`pomankljivosti`
-  - poimenovanje stolpcev
-  - izbris zadnjih 20 vrstic z nepomembnimi podatki
-  - združitev podatkov glede na tip in vrednost
-
+4.`pomankljivosti` :
+  - poimenovanje stolpcev,
+  - izbris zadnjih 20 vrstic z nepomembnimi podatki,
+  - združitev podatkov glede na tip in vrednost.
 
 # Analiza in vizualizacija podatkov
 
@@ -113,9 +93,9 @@ Z istim ukazom sem občine razvrstila glede na tri kazalnike: gostoto poselitve,
 
 Gostota poselitve je izražena v prebivalcih na kvadratni kilometer. Osnova razdelitve občin v štiri skupine je bila gostota osrednje občine Ljubljana, ta znaša 1045 prebivalcev na kvadratni kilometer, kar je slovenski maksimum. To vrednost sem razdelila na kvartile in osnovala skupine občin z zelo redko (do 261 preb./km^2), redko (od 262 do 521 preb./km^2), gosto (od 522 do 780 preb./km^2) in zelo gosto (od 781 preb./km^2) poselitvijo.
 
-Občine sem glede na vrednost kazalnika registrirane stopnje brezposelnosti razdelila le v dve skupini glede na slovensko povprečje. To znaša 12,3 % registriranih brezposelnih (zaokroženo na 12 %). Občine z deležem brezposelnosti nižjim od 12 % so označene kot kritične, občine z višjim deležem pa kot nekritične. 
+Občine sem glede na vrednost kazalnika registrirane stopnje brezposelnosti razdelila le v dve skupini glede na slovensko povprečje. Slovensko povprečje znaša 12,3 % registriranih brezposelnih (zaokroženo na 12 %). Občine z deležem brezposelnosti nižjim od 12 % so označene kot kritične, občine z višjim deležem pa kot nekritične. 
 
-Pri povprečnih mesečnih neto plačah sem osnovala tri skupine na osnovi slovenskega povprečja, ki ga predstavlja indeks 100. Občine s plačami, ki od povprečja odstopajo navzgor ali navzdol za 10 % sem uvrstila v skupino občin s srednje visokimi plačami (indeks od 90 do 110). Občine z indeksom nižjim od 90 spadajo v skupino občin z nizkimi plačami, tiste z indeksom nad 110 pa v skupino občin z visokimi plačami. 
+Pri povprečnih mesečnih neto plačah sem osnovala tri skupine na osnovi slovenskega povprečja, ki ga predstavlja indeks 100. Občine s plačami, ki od povprečja odstopajo navzgor ali navzdol za 10 %, sem uvrstila v skupino občin s srednje visokimi plačami (indeks od 90 do 110). Občine z indeksom nižjim od 90 spadajo v skupino občin z nizkimi plačami, tiste z indeksom nad 110 pa v skupino občin z visokimi plačami. 
 
 Glede na vsebino obdelanih podatkov sem naredila tabele s tistimi spremenljivkami, za katere sem domnevala, da bi med njimi morda lahko obstajala povezava. Združila sem gostoto prebivalstva in kanalizacijo, povprečne plače in ogrevanje, gostoto prebivalstva ter vodovod. To sem naredila z ukazoma group_by ter summarise.
 
@@ -137,19 +117,19 @@ source("vizualizacija/vizualizacija.r", encoding="UTF-8")
 t1
 ```
 
-Naslednji tortni diagram prikazuje problem brezposelnosti v Sloveniji leta 2015. Kritičnost situacije (mejo) sem določila glede na slovensko povprečje povprečne stopnje brezposelnosti v Sloveniji, ki v tem letu znašala 12,3 %. Slabih 60 % občin ne trpi zaradi previsoke brezposelnosti oziroma je njihova brezposelnost nižja od slovenskega povprečja. Na drugi strani pa ima dobrih 40 % občin brezposelnost višjo od slovenskega povprečja.  Najmanj brezposelnih ima občina Žiri, najbolj kritično pa je v Rogašovcih. 
+Naslednji tortni diagram prikazuje problem brezposelnosti v Sloveniji leta 2015. Kritičnost situacije (mejo) sem določila glede na povprečno stopnjo brezposelnosti v Sloveniji, ki v tem letu znašala 12,3 %. Slabih 60 % občin ne trpi zaradi previsoke brezposelnosti oziroma je njihova brezposelnost nižja od slovenskega povprečja. Na drugi strani pa ima dobrih 40 % občin brezposelnost višjo od slovenskega povprečja. Najmanj brezposelnih ima občina Žiri, najbolj kritično pa je v Rogašovcih. 
 
 ```{r tortni_diagram2, echo=FALSE, fig.align='center'}
 t2
 ```
 
-Izhodišče za diagram povprečne mesečne neto plače na ravni občin je slovensko povprečje, ki predstavlja indeks 100. Občine se pozicionirajo glede na ta indeks, torej občine z nižjo povprečno plačo imajo indeks pod 100, tiste z nadpovprečno pa večji od 100. Občine sem grupirala v tri skupine na že zgoraj opisan način, tiste z nizkimi, srednjimi in visokimi povprečnimi plačami. Delež občin, v katerih so povprečne plače visoke, znaša le dober odstotek. Največji je delež občin, v katerih so povprečne plače nizke in sicer 54 %. Občin, v katerih so povprečne plače srednje visoke, pa je slabih 45 %. Najvišji indeks je bil izmerjen v Cerkljah na Gorenjskem, najnižji pa v Kostanjevici na Krki.
+Izhodišče za diagram povprečne mesečne neto plače, je bilo slovensko povprečje, ki ga predstavlja indeks 100. Občine se pozicionirajo glede na ta indeks, torej občine z nižjo povprečno plačo imajo indeks pod 100, tiste z nadpovprečno pa večji od 100. Občine sem grupirala v tri skupine na že zgoraj opisan način, tiste z nizkimi, srednjimi in visokimi povprečnimi plačami. Delež občin, v katerih so povprečne plače visoke, znaša le dober odstotek. Največji je delež občin, v katerih so povprečne plače nizke in sicer 54 %. Občin, v katerih so povprečne plače srednje visoke, pa je slabih 45 %. Najvišji indeks je bil izmerjen v Cerkljah na Gorenjskem, najnižji pa v Kostanjevici na Krki.
 
 ```{r tortni_diagram3, echo=FALSE, fig.align='center'}
 t3
 ```
 
-Na osnovi združitve podatkov iz napeljav in kazalnikov sem narisala nekaj črtnih diagramov in na ta način analizirala povezanosti parov posameznih spremenljivk: vodovodne napeljave in gostota poselitve, napeljave kanalizacije in gostota poselitve, ogrevalne napeljave in plače prebivalstva ter število kuhinj in število stanovanj. Grafom sem dodala naslove, legende, oznake in imena osi.
+Na osnovi združitve podatkov iz napeljav in kazalnikov sem narisala nekaj črtnih diagramov in na ta način analizirala povezanosti parov posameznih spremenljivk: vodovodne napeljave in gostota poselitve, napeljave kanalizacije in gostota poselitve ter ogrevalne napeljave in plače prebivalstva. Grafom sem dodala naslove, legende, oznake in imena osi.
 
 V prvem grafu  spodaj je prikazano število vodovodnih napeljav glede na gostoto poselitve v obdobju med 2002 in 2010. Opazila sem, da se pri redkejši poselitvi število vodovodnih napeljav povečuje počasneje. Zanemarljivo majhne so spremembe v občinah z zelo redko ter redko gostoto, situacija tam je bolj ali manj stabilna. Hitrejše povečevanje števila napeljav pa je opaziti pri občinah z gosto in zelo gosto poselitvijo.
 
@@ -214,6 +194,13 @@ Ugotavljala sem še vpliv stopnje brezposelnosti na delež stanovanj brez centra
 m2
 ```
  
+# Sklep
+
+V predstavljenem projektu, narejenem v okviru predmeta Analiza podatkov s programom R, sem se naučila uvoza, čiščenja in obdelave podatkov. Za analizo stanovanjskih razmer in opremljenosti stanovanj po občinah v Sloveniji sem uporabila ustrezne podatke Statističnega urada RS. Osredotočila sem se na napeljave, pomanjkljivosti in kazalnike razvitosti občin, kot na primer gostota poseljenosti ali plače. Vse razpredelnice sem najprej pretvorila v obliko tidy data. 
+
+Nato sem se lotila prikaza deskriptivnih statistik izbranih spremenljivk in vizualizacije podatkov. Uporabila sem različne grafične predstavitve: tortne in črtne diagrame. Za boljšo vizualizacijo, sem se naučila tudi izrisa zemljevida v R-ju. Kar se mi zdi še posebej uporabno pri predstavitvi podatkov, ki imajo geografsko oziroma prostorsko razsežnost. 
+
+Na koncu sem naredila tudi naprednejšo analizo, v mejah znanja pridobljenega pri predmetu Verjetnost in statistika. Odločila sem se bivariatno linearno regresijo vpliva plač in brezposelnosti na centralno ogrevanje. V splošnem sem tako z izdelavo projekta pridobila veliko uporabnih znanj.
 
 ```{r shiny, echo=FALSE}
 #shinyAppDir("shiny", options=list(width="100%", height=600))
