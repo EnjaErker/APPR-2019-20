@@ -84,7 +84,7 @@ tr <- ggplot(pomankljivi, aes(x="", y=Število, fill=Stopnja)) + geom_bar(stat="
 proj4string(obcine)<- CRS("+proj=utm +zone=10+datum=WGS84")
 
 z1 <- tm_shape(merge(obcine, gostota_z, by.x="OB_UIME", by.y="Obcina")) + tm_polygons("vrednost", title="Gostota naseljenosti (preb/km^2)") +
-  tm_layout(title="Gostota prebivalstva Slovenije leta 2015", legend.position=c(0.65,0.005), legend.height=0.7, title.size=1.5, legend.title.size=0.2)
+  tm_layout(title="Gostota prebivalstva Slovenije leta 2015", legend.position=c(0.65,0.005), legend.height=0.7, title.size=1.5, legend.title.size=0.8)
 
 #place
 z2 <- tm_shape(merge(obcine, placa_indeks_z, by.x="OB_UIME", by.y="Obcina")) + tm_polygons("vrednost", title="Vrednost indeksa") + 
@@ -96,7 +96,7 @@ z3 <- tm_shape(merge(obcine, brezposelni_z, by.x="OB_UIME", by.y="Obcina")) + tm
 
 #stevilo stanovanj na 1000 prebivalcev
 z4 <- tm_shape(merge(obcine, stanovanja_z, by.x="OB_UIME", by.y="Obcina")) + tm_polygons("vrednost", title="Število stanovanj na 1000 preb.") + 
-  tm_layout(title="Število stanovanj v letu 2015",legend.position=c(0.68,0.005), legend.height=0.7, title.size=1.5, legend.title.size=0.2) 
+  tm_layout(title="Število stanovanj v letu 2015",legend.position=c(0.68,0.005), legend.height=0.7, title.size=1.5, legend.title.size=0.8) 
 
 #LINEARNA REGRESIJA
 
